@@ -1,4 +1,4 @@
-#Les restriction des **temps d'écran** et comment essayer de le désactiver ou le contourners sur IOS 18
+# Les restriction des **temps d'écran** et comment essayer de le désactiver ou le contourners sur IOS 18
 ---
 - Fontionnement 
   - Le temps d'écran sert a désigner la somme des temps passées devant les écran de télevision
