@@ -15,7 +15,7 @@
   - Tu pourra alors rénitialiser le code et désactiiver ou modofier les limites.
 ---
 - Si vous voulez pas rénitialiser le code ( pas d'indentidiant Apple lié ) 
+
 | Etape  | Action         | Résultat             |
 |--------|----------------|----------------------|
-| 1      |
-| 2      |
+| 1      | Connecter l'Iphone à un ordinateur | jdjeje |
