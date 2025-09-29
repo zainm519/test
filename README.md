@@ -22,5 +22,6 @@
 | 2      | Sélectionne Temps d'écran | Trouve et tape sur "Temps d'écran" dans la liste des réglages. |
 | 3      | Tape sur Modifier le code Temps d'écran ou Désactiver le code Temps d'écran | Cette option est en bas de l'écran. |
 | 4      | Clique sur Code oublié ? | Lorsque tu es invité à saisir le code, tape sur "Code oublié ?" juste en dessous.
-| 5      | Créé un nouveau code | Saisis un nouveau code Temps d'écran que tu pourras mémoriser | 
-|
+| 5      | Entre l'identifiant Apple | Entre l'indentifiant Apple (adresse email) et le mot de passe utiliseés pour configurer Temps d'écran.|
+| 6      | Créé un nouveau code | Saisis un nouveau code Temps d'écran que tu pourras mémoriser | 
+| 7      | Termine la modification | le code est rénitialisé, tu peux maintenant modifier ou désactiver le temps d'écran.|
