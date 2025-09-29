@@ -25,3 +25,7 @@
 | 5      | Entre l'identifiant Apple | Entre l'indentifiant Apple (adresse email) et le mot de passe utiliseés pour configurer Temps d'écran.|
 | 6      | Créé un nouveau code | Saisis un nouveau code Temps d'écran que tu pourras mémoriser | 
 | 7      | Termine la modification | le code est rénitialisé, tu peux maintenant modifier ou désactiver le temps d'écran.|
+
+- Exploiter les réglages de l'appareil
+ - Modification de l'heure et de la date ( si le code n'est pas bloqué)
+ - Si la restriction de t'emps d'écran est basée sur un horaire (par exemple, "Temps d'arrêt" la nuit), certain élèves essaient de désactiver le réglage automatique de l'heure et de la modifer manuellement pour "revenir en arrière" dans une période non restreinte.  
