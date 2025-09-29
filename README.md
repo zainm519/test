@@ -30,4 +30,12 @@
  - Modification de l'heure et de la date ( si le code n'est pas bloqué)
  - Si la restriction de t'emps d'écran est basée sur un horaire (par exemple, "Temps d'arrêt" la nuit), certain élèves essaient de désactiver le réglage automatique de l'heure et de la modifer manuellement pour "revenir en arrière" dans une période non restreinte.
  - Contre-mesure possible pour le contrôle parental : Bloquer les modifications des réglages de l'heure et le date via les options de restrictions de contenu et de confidentialité .
- -   
+- URL
+ - Apps opps
+ - https://play.google.com/store/apps/details?id=rikka.appops&hl=fr
+ - freedom
+ - https://play.google.com/store/apps/details?id=to.freedom.android2&hl=fr
+ Stay foscusd
+https://chromewebstore.google.com/detail/stayfocusd-%E2%80%93-website-bloc/laankejkbhbdhmipfmgcngdelahlfoji?hl=fr
+cold turkey
+https://getcoldturkey.com/   
