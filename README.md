@@ -28,4 +28,6 @@
 
 - Exploiter les réglages de l'appareil
  - Modification de l'heure et de la date ( si le code n'est pas bloqué)
- - Si la restriction de t'emps d'écran est basée sur un horaire (par exemple, "Temps d'arrêt" la nuit), certain élèves essaient de désactiver le réglage automatique de l'heure et de la modifer manuellement pour "revenir en arrière" dans une période non restreinte.  
+ - Si la restriction de t'emps d'écran est basée sur un horaire (par exemple, "Temps d'arrêt" la nuit), certain élèves essaient de désactiver le réglage automatique de l'heure et de la modifer manuellement pour "revenir en arrière" dans une période non restreinte.
+ - Contre-mesure possible pour le contrôle parental : Bloquer les modifications des réglages de l'heure et le date via les options de restrictions de contenu et de confidentialité .
+ -   
