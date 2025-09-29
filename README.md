@@ -1,6 +1,6 @@
 #Les restriction des **temps d'écran** et comment essayer de le désactiver ou le contourners sur IOS 18
 
-#Fontionnement 
+Fontionnement 
 -Le temps d'écran sert a désigner la somme des temps passées devant les écran de télevision
 - d'ordinateur
 - de jeux vidéo
