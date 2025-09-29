@@ -14,4 +14,4 @@
   - Ensuite, enrte l'indentifiant Apple et le mot de passe qui ont été utilisés pour configurer Temps d'écran.
   - Tu pourra alors rénitialiser le code et désactiiver ou modofier les limites.
    |Etape| |Action| |Résultat|
-  |:----------|
+  |:----------:|
