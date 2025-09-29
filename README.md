@@ -1,7 +1,7 @@
 #Les restriction des **temps d'écran** et comment essayer de le désactiver ou le contourners sur IOS 18
 
--Fontionnement 
- -Le temps d'écran sert a désigner la somme des temps passées devant les écran de télevision
+- Fontionnement 
+ - Le temps d'écran sert a désigner la somme des temps passées devant les écran de télevision
  - d'ordinateur
  - de jeux vidéo
  - ainsi que les tablette ou autre dispositif portatifs. Il est particuliérement utilise dans les études et recommandations portant sur l'utilisation des écrans par les enfants 
