@@ -15,8 +15,8 @@
   - Tu pourra alors rénitialiser le code et désactiiver ou modofier les limites.
 ---
 - Si vous voulez pas rénitialiser le code ( pas d'indentidiant Apple lié ) 
-
 | Etape  | Action         | Résultat             |
+
 |--------|----------------|----------------------|
 | 1      | Ouvrir Réglages | Sur l'Iphone, va dans l'application Réglages. |
 | 2      | Sélectionne Temps d'écran | Trouve et tape sur "Temps d'écran" dans la liste des réglages. |
@@ -35,3 +35,8 @@
   - [freedom](https://play.google.com/store/apps/details?id=to.freedom.android2&hl=fr)
   - [Stay foscusd](https://chromewebstore.google.com/detail/stayfocusd-%E2%80%93-website-bloc/laankejkbhbdhmipfmgcngdelahlfoji?hl=fr)
   - [cold turkey](https://getcoldturkey.com/)   
+
+ | Nom de l'objet  | URL         |
+
+|--------| |----------------------|
+|
