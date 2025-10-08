@@ -30,6 +30,6 @@ technocoen SAV spécialisé dans les systèmes de sécurité
 Même si le bac pro permet de directement entrer dans le monde professionnel, il est souvent possible de continuer ses études, par exemple :
 
 un **BTS Systèmes Numériques (SN)** — options électronique & communications ou informatique & réseaux 
-***
 **un BTS Domotique / Bâtiments communicants** ou formations dans le domaine de l’énergétique / automatisme 
 d’autres voies technologiques ou professionnelles en lien avec les installations, l’électronique, la sécurité, l’automatisme.
+***
