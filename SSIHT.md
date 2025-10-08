@@ -11,3 +11,8 @@ Dans cette option SSIHT, plusieurs domaines technique sont abordés :
 **Gestion technique du bâtiment** / **domotique** / **immotique** (gestion active des bâtiments intelligents, automatisation des systèmes, gestion des ouvrant, gestion énergétiques, etc.)
 La formation inclut également les aspects de maintenace (pratiques, corrective, préventive), de mises en service, de réglages, de configuration 
 Les cours généraux (mathématiques, sciences physiques, français,langues vivantes, etc.) sont aussi inclus.
+
+# Conditions, durée, et stages
+La formation se déroules sur 3 ans (après la 3e) pour obtenir le Bac Pro SN option SSIHT.
+Il y a 22 semaines de formation en entreprise répartie sur ces 3 années 6 semaines en seconde, 8 en prémière, 8 en terminale).
+L'option ouvre aux élèves motivés, après la classe de 3e, avec des bases sufisantes en mathématique et sciences .
