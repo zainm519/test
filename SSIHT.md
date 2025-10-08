@@ -1,6 +1,6 @@
 # Qu'est ce que la SSIHT ?
 La fillière SSIHT est une option de Baccalauréat Proffesionnel Systèmes Numériques (SN), appelée « option A : SSIHT ».
-Le but de cette option est de former des technicien capable de concevoir, installer, mettre en service, maintenir et dépanner des systèmes liés à la sécurisation des biens et des personnes, dans les bâtiment, les infrastructures, l'habitat, ou les secter tertiares (bureaux, bâtiments publics, etc.).
+Le but de cette option est de former des technicien capable de concevoir, installer, mettre en service, maintenir et dépanner des systèmes liés à la sécurisation des biens et des personnes, dans les bâtiment, les infrastructures, l'habitat, ou les secteur tertiares (bureaux, bâtiments publics, etc.).
 ***
 # Contenu et compétences développées
 Dans cette option SSIHT, plusieurs domaines technique sont abordés :
@@ -23,7 +23,7 @@ technicien de sécurité (alarme,intrusion, incendie)
 technicien de maintenance sécurité / système de sûreté
 installateur / intégrateur domotiques ou systèmes de bâtiments intelligents
 techinicien contrôle d'accès / vidéosurveillance
-technocoen SAV spécialisé dans les systèmes de sécurité 
+technicien SAV spécialisé dans les systèmes de sécurité 
 ***
 # Poursuites d’études
 
