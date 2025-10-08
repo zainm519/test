@@ -16,7 +16,7 @@ Les cours généraux (mathématiques, sciences physiques, français,langues viva
 La formation se déroules sur 3 ans (après la 3e) pour obtenir le Bac Pro SN option SSIHT.
 (Il y a 22 semaines de formation en entreprise répartie sur ces 3 années 6 semaines en seconde, 8 en prémière, 8 en terminale).
 L'option ouvre aux élèves motivés, après la classe de 3e, avec des bases sufisantes en mathématique et sciences . 
----
+***
 # Debouchés professionnels et poursuites 'études possibles 
 **Métiers possibles**
 technicien de sécurité (alarme,intrusin, incendie)
@@ -24,12 +24,12 @@ technicien de maintenance sécurité / système de sûreté
 installateur / intégrateur domotiques ou systèmes de bâtiments intelligents
 techinicien contrôle d'accès / vidéosurveillance
 technocoen SAV spécialisé dans les systèmes de sécurité 
----
+***
 # Poursuites d’études
 
 Même si le bac pro permet de directement entrer dans le monde professionnel, il est souvent possible de continuer ses études, par exemple :
 
 un **BTS Systèmes Numériques (SN)** — options électronique & communications ou informatique & réseaux 
----
+***
 **un BTS Domotique / Bâtiments communicants** ou formations dans le domaine de l’énergétique / automatisme 
 d’autres voies technologiques ou professionnelles en lien avec les installations, l’électronique, la sécurité, l’automatisme.
