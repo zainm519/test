@@ -2,7 +2,7 @@
 <html lang="fr">
   <head>
     <meta charset="UTF-8" />
-    <title>Mon Monde Sous-Marin</title>
+    <title>Mon Monde SSI</title>
 
     <!-- Librairies A-Frame -->
     <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
@@ -17,3 +17,12 @@
     <a-asset-item id="cam" src="./caméra_cctv_low-poly.glb"></a-asset-item>
     <a-asset-item id="sur" src="./surveillance_camera.glb"></a-asset-item>
     <a-asset-item id="alr" src="./alarme.glb"></a-asset-item>
+</a-assets>
+
+      <!-- Caméra avec curseur -->
+      <a-entity camera position="0 1.6 0" look-controls>
+        <a-entity cursor="rayOrigin: mouse"></a-entity>
+      </a-entity>
+
+       <!-- Ciel -->
+      <a-sky src="./panorama1.jpg"></a-sky>
