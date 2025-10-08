@@ -10,19 +10,27 @@
   </head>
 
   <body>
-  
-
     <a-scene>
       <!-- Assets -->
-    <a-asset-item id="camé" src="./caméra_cctv_low-poly.glb"></a-asset-item>
-    <a-asset-item id="surv" src="./surveillance_camera.glb"></a-asset-item>
-    <a-asset-item id="alar" src="./alarme.glb"></a-asset-item>
-</a-assets>
+      <a-assets>
+        <a-asset-item id="came" src="./caméra_cctv_low-poly.glb"></a-asset-item>
+        <a-asset-item id="surv" src="./surveillance_camera.glb"></a-asset-item>
+        <a-asset-item id="alar" src="./alarme.glb"></a-asset-item>
+        <img id="chambre" src="./design-d-interieur-de-chambre.jpg" />
+      </a-assets>
 
-      <!-- Caméra avec curseur -->
+      <!-- Ciel -->
+      <a-sky src="#chambre"></a-sky>
+
+      <!-- Caméra -->
       <a-entity camera position="0 1.6 0" look-controls>
         <a-entity cursor="rayOrigin: mouse"></a-entity>
       </a-entity>
 
-       <!-- Ciel -->
-      <a-sky src="./design-d-interieur-de-chambre.jpg"></a-sky>
+      <!-- Modèles 3D -->
+      <a-entity gltf-model="#came" position="0 1 -3" scale="0.5 0.5 0.5"></a-entity>
+      <a-entity gltf-model="#surv" position="2 1 -3" scale="0.5 0.5 0.5"></a-entity>
+      <a-entity gltf-model="#alar" position="-2 1 -3" scale="0.5 0.5 0.5"></a-entity>
+    </a-scene>
+  </body>
+</html>
