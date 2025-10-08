@@ -19,7 +19,7 @@ L'option ouvre aux élèves motivés, après la classe de 3e, avec des bases suf
 ***
 # Debouchés professionnels et poursuites 'études possibles 
 **Métiers possibles**
-technicien de sécurité (alarme,intrusin, incendie)
+technicien de sécurité (alarme,intrusion, incendie)
 technicien de maintenance sécurité / système de sûreté
 installateur / intégrateur domotiques ou systèmes de bâtiments intelligents
 techinicien contrôle d'accès / vidéosurveillance
