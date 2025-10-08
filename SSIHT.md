@@ -14,7 +14,7 @@ Les cours généraux (mathématiques, sciences physiques, français,langues viva
 
 # Conditions, durée, et stages
 La formation se déroules sur 3 ans (après la 3e) pour obtenir le Bac Pro SN option SSIHT.
-Il y a 22 semaines de formation en entreprise répartie sur ces 3 années 6 semaines en seconde, 8 en prémière, 8 en terminale).
+(Il y a 22 semaines de formation en entreprise répartie sur ces 3 années 6 semaines en seconde, 8 en prémière, 8 en terminale).
 L'option ouvre aux élèves motivés, après la classe de 3e, avec des bases sufisantes en mathématique et sciences . 
 
 # Debouchés professionnels et poursuites 'études possibles 
