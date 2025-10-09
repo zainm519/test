@@ -11,6 +11,7 @@
       <a-assets>
         <a-asset-item id="alar" src="./alarme.glb"></a-asset-item>
         <img id="salless" src="./sallessihtb.jpg" />
+        <audio id="alarmsound" src="./alarme-342932.mp3" preload="auto"></audio>
       </a-assets>
 
       <!-- Ciel -->
@@ -27,7 +28,8 @@
                 position="-13.79992 -30.02283 22.72893"
                 scale="13 13 13"
                 rotation="0 119.99999999999999 0"
-                class="clickable">
+                class="clickable"
+                sound="src: #alarmsound; autoplay: false; volume: 2">
       </a-entity>
     </a-scene>
 
@@ -37,6 +39,9 @@
       alarm.addEventListener('click', () => {
         if (alarm.classList.contains('triggered')) return; // éviter double clic
         alarm.classList.add('triggered');
+
+        // 🔊 Jouer le son
+        alarm.components.sound.playSound();
 
         // 🔥 Ajouter effet feu : lumière + flamme
         const flameLight = document.createElement('a-entity');
