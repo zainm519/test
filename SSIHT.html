@@ -7,7 +7,7 @@
   </head>
   <body>
     <a-scene>
-      <!-- Assets -->
+      <!-- 🎞️ Assets -->
       <a-assets>
         <a-asset-item id="alar" src="./alarme.glb"></a-asset-item>
         <a-asset-item id="survpas" src="./surveillance_camerapaspied.glb"></a-asset-item>
@@ -16,20 +16,35 @@
         <audio id="alarmsound" src="./alarme-342932.mp3" preload="auto"></audio>
       </a-assets>
 
-      <!-- Ciel -->
+      <!-- 🌌 Ciel -->
       <a-sky src="#salless"></a-sky>
 
-      <!-- Caméra -->
+      <!-- 🎥 Caméra du joueur -->
       <a-entity camera position="0 1.6 0" look-controls>
         <a-entity cursor="rayOrigin: mouse"></a-entity>
       </a-entity>
 
-      <!-- Alarme -->
+      <!-- 🎥 Caméras de surveillance -->
+      <a-entity id="surv"
+                gltf-model="#surv"
+                position="5 0 -10"
+                scale="2 2 2"
+                rotation="0 45 0">
+      </a-entity>
+
+      <a-entity id="survpas"
+                gltf-model="#survpas"
+                position="-5 0 -10"
+                scale="2 2 2"
+                rotation="0 -45 0">
+      </a-entity>
+
+      <!-- 🔔 Alarme -->
       <a-entity id="alarme"
                 gltf-model="#alar"
                 position="-13.79992 -30.02283 22.72893"
                 scale="13 13 13"
-                rotation="0 119.99999999999999 0"
+                rotation="0 120 0"
                 class="clickable"
                 sound="src: #alarmsound; autoplay: false; volume: 2">
       </a-entity>
