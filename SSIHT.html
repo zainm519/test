@@ -7,6 +7,10 @@
     <!-- Librairies A-Frame -->
     <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-extras@v6.1.1/dist/aframe-extras.min.js"></script>
+
+    <style>
+      body { margin: 0; }
+    </style>
   </head>
 
   <body>
@@ -15,8 +19,11 @@
       <a-assets>
         <a-asset-item id="came" src="./caméra_cctv_low-poly.glb"></a-asset-item>
         <a-asset-item id="surv" src="./surveillance_camera.glb"></a-asset-item>
+        <!-- on garde l'asset id 'alar' et on l'utilisera avec gltf-model="#alar" -->
         <a-asset-item id="alar" src="./alarme.glb"></a-asset-item>
         <img id="salless" src="./sallessihtb.jpg" />
+        <!-- son d'explosion optionnel (décommentez et fournissez le fichier si souhaité) -->
+        <!-- <audio id="boom-snd" src="./explosion.wav"></audio> -->
       </a-assets>
 
       <!-- Ciel -->
@@ -29,8 +36,116 @@
 
       <!-- Modèles 3D -->
       <a-entity gltf-model="#came" position="0 1 -3" scale="0.5 0.5 0.5"></a-entity>
-      <a-entity gltf-model="./surveillance_camera.glb" position="-13.8 6.88047 13.41928" scale="5 5 5" rotation="19.846112107741455 140.14146598443347 -15.825094301513337"></a-entity>
-      <a-entity gltf-model="./alarme.glb" position="-13.79992 -30.02283 22.72893" scale="13 13 13" rotation="0 119.99999999999999 0"></a-entity>
+      <a-entity gltf-model="#surv" position="-13.8 6.88047 13.41928" scale="5 5 5" rotation="19.846 140.141 -15.825"></a-entity>
+
+      <!-- Entité alarme : on lui donne un id pour pouvoir l'attacher -->
+      <a-entity id="alarme"
+                gltf-model="#alar"
+                position="-13.79992 -30.02283 22.72893"
+                scale="13 13 13"
+                rotation="0 120 0"
+                class="clickable">
+      </a-entity>
+
+      <!-- (Optionnel) Entité son globale : décommenter si vous avez l'audio -->
+      <!-- <a-entity id="soundPlayer" sound="src: #boom-snd; on: playboom"></a-entity> -->
+
     </a-scene>
+
+    <script>
+      // Récupère l'entité alarme
+      const alarm = document.querySelector('#alarme');
+
+      // Empêcher recréation si déjà déclenchée
+      alarm.addEventListener('click', function (evt) {
+        if (this.classList.contains('triggered')) return;
+        this.classList.add('triggered');
+
+        // --- 1) créer une flamme simple (cone semi-transparent animé) ---
+        const flame = document.createElement('a-cone');
+        flame.setAttribute('id', 'flame-visual');
+        // position relative à l'entité alarm (à ajuster)
+        flame.setAttribute('position', '0 1 0');
+        flame.setAttribute('radius-bottom', '0.45');
+        flame.setAttribute('height', '1.2');
+        flame.setAttribute('material', 'color: orange; opacity: 0.85; emissive: #ff6a00; transparent: true; shader: standard');
+        flame.setAttribute('animation', 'property: scale; to: 1.0 1.2 1.0; dir: alternate; dur: 350; loop: true');
+        flame.setAttribute('animation__pos', 'property: position; to: 0 1.06 0; dir: alternate; dur: 200; loop: true');
+        this.appendChild(flame);
+
+        // légère lumière pour l'effet feu
+        const light = document.createElement('a-entity');
+        light.setAttribute('id', 'flame-light');
+        light.setAttribute('light', 'type: point; intensity: 1.4; color: #ffb86b; distance: 6');
+        light.setAttribute('position', '0 1 0');
+        this.appendChild(light);
+
+        // --- 2) après 3 secondes, explosion ---
+        setTimeout(() => {
+          explodeAlarm(this);
+        }, 3000);
+      });
+
+      function explodeAlarm(alarmEl) {
+        // supprimer la flamme et la lumière
+        const f = alarmEl.querySelector('#flame-visual'); if (f) f.remove();
+        const l = alarmEl.querySelector('#flame-light'); if (l) l.remove();
+
+        // masquer le modèle de l'alarme (ou le détruire)
+        alarmEl.setAttribute('visible', 'false');
+
+        // option : jouer son d'explosion (si configuré)
+        // document.querySelector('#soundPlayer')?.emit('playboom');
+
+        // --- effet boule d'explosion ---
+        const blast = document.createElement('a-sphere');
+        blast.setAttribute('position', alarmEl.getAttribute('position')); // spawn au même endroit global
+        blast.setAttribute('radius', '0.5');
+        blast.setAttribute('material', 'color: #ff5e00; emissive: #ff5e00; transparent: true; opacity: 0.95; shader: standard');
+        // animation d'expansion + disparition
+        blast.setAttribute('animation', 'property: scale; to: 8 8 8; dur: 600; easing: easeOutQuad');
+        blast.setAttribute('animation__fade', 'property: material.opacity; to: 0; dur: 700; delay: 200');
+        alarmEl.parentNode.appendChild(blast);
+
+        // --- particules / débris (boîtes qui s'éjectent) ---
+        const debrisCount = 12;
+        for (let i = 0; i < debrisCount; i++) {
+          const box = document.createElement('a-box');
+          // spawn à la position de l'alarme
+          const pos = alarmEl.getAttribute('position');
+          box.setAttribute('position', `${pos.x} ${pos.y + 1} ${pos.z}`);
+          box.setAttribute('width', '0.12');
+          box.setAttribute('height', '0.12');
+          box.setAttribute('depth', '0.12');
+          box.setAttribute('material', 'color: #777; metalness: 0.3; roughness: 0.6; transparent: true; opacity: 1');
+
+          // direction aléatoire
+          const angle = Math.random() * Math.PI * 2;
+          const speed =  (Math.random() * 1.6) + 0.6;
+          const vx = Math.cos(angle) * speed;
+          const vz = Math.sin(angle) * speed;
+          const vy = (Math.random() * 1.8) + 0.8;
+
+          // animation position "tirée" vers l'extérieur
+          const targetX = pos.x + vx;
+          const targetY = pos.y + 1 + vy;
+          const targetZ = pos.z + vz;
+          box.setAttribute('animation', `property: position; to: ${targetX} ${targetY} ${targetZ}; dur: 1000; easing: easeOutCubic`);
+          // disparition progressive
+          box.setAttribute('animation__fade', 'property: material.opacity; to: 0; dur: 900; delay: 200');
+
+          alarmEl.parentNode.appendChild(box);
+
+          // retire la box après l'animation pour nettoyer la scène
+          setTimeout(() => { if (box.parentNode) box.parentNode.removeChild(box); }, 1400);
+        }
+
+        // retire la boule d'explosion après la fin de l'animation
+        setTimeout(() => { if (blast.parentNode) blast.parentNode.removeChild(blast); }, 1200);
+
+        // (option) si tu veux réapparaître l'alarme plus tard, supprime ou commente la ligne qui met visible=false,
+        // et au lieu de masquer tu peux faire alarmEl.setAttribute('visible','true') après X ms.
+      }
+    </script>
   </body>
 </html>
