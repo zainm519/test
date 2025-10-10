@@ -2,7 +2,7 @@
 <html lang="fr">
   <head>
     <meta charset="UTF-8" />
-    <title>Explosion Alarme Réinitialisable</title>
+    <title>Alarme Réinitialisable avec Explosion</title>
     <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
   </head>
   <body>
@@ -50,21 +50,27 @@
         rotation="0 120 0"
         class="clickable"
         sound="src: #alarmsound; autoplay: false; volume: 2"
+        material="color: red"
       ></a-entity>
     </a-scene>
 
     <script>
       const alarm = document.querySelector('#alarme');
+      const originalColor = 'red'; // couleur d'origine
+      const activeColor = 'orange'; // couleur pendant activation
 
       alarm.addEventListener('click', () => {
-        // empêcher plusieurs clics simultanés
+        // éviter double clic pendant animation
         if (alarm.classList.contains('triggered')) return;
         alarm.classList.add('triggered');
 
-        // 🔊 Démarrer le son
+        // 🟥 changer la couleur pour signaler l'activation
+        alarm.setAttribute('material', `color: ${activeColor}`);
+
+        // 🔊 jouer le son
         alarm.components.sound.playSound();
 
-        // 💡 Lumière + flamme
+        // 🔥 flamme + lumière
         const flameLight = document.createElement('a-entity');
         flameLight.setAttribute(
           'light',
@@ -86,15 +92,16 @@
         );
         alarm.appendChild(flame);
 
-        // 💥 Explosion après 3 secondes
+        // 💥 explosion après 3 secondes
         setTimeout(() => {
           flame.remove();
           flameLight.remove();
           triggerExplosion(alarm.object3D.position);
 
-          // ♻️ Réinitialiser après explosion
+          // ♻️ remettre couleur d'origine et re-cliquable
           setTimeout(() => {
-            alarm.classList.remove('triggered'); // redeviens cliquable
+            alarm.setAttribute('material', `color: ${originalColor}`);
+            alarm.classList.remove('triggered');
           }, 1500);
         }, 3000);
       });
@@ -102,14 +109,14 @@
       function triggerExplosion(pos3D) {
         const scene = document.querySelector('a-scene');
 
-        // Position légèrement plus basse
+        // position légèrement plus basse
         const pos = {
           x: pos3D.x,
           y: pos3D.y - 10,
           z: pos3D.z
         };
 
-        // 💣 Boule d'explosion
+        // 💣 boule d'explosion
         const blast = document.createElement('a-sphere');
         blast.setAttribute('position', pos);
         blast.setAttribute('radius', '2');
@@ -129,7 +136,7 @@
 
         setTimeout(() => blast.remove(), 1200);
 
-        // 🧱 Débris
+        // 🧱 débris
         for (let i = 0; i < 10; i++) {
           const debris = document.createElement('a-box');
           debris.setAttribute('position', `${pos.x} ${pos.y + 5} ${pos.z}`);
