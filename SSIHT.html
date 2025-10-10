@@ -2,7 +2,7 @@
 <html lang="fr">
   <head>
     <meta charset="UTF-8" />
-    <title>Explosion Alarme</title>
+    <title>Explosion Alarme Réinitialisable</title>
     <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
   </head>
   <body>
@@ -25,19 +25,21 @@
       </a-entity>
 
       <!-- 🎥 Caméras de surveillance -->
-      <a-entity>
-      </a-entity>
+      <a-entity
         id="surv"
         gltf-model="#surv"
         position="-31.71937 19.99428 49.34695"
         scale="15 15 15"
         rotation="-17.79 -33.49 11.10"
-      </a-entity>
-        <a-entity id="survpas" gltf-model="./surveillance_camerapaspied.glb" 
-        position="-29.28383 15.84806 44.92851" 
-        scale="15 15 15" 
-  rotation="17.39 147.23 -1.12">
-  </a-entity>
+      ></a-entity>
+
+      <a-entity
+        id="survpas"
+        gltf-model="#survpas"
+        position="-4.74865 3.94615 7.22221"
+        scale="2.5 2.5 2.5"
+        rotation="17.39 147.23 -1.12"
+      ></a-entity>
 
       <!-- 🔔 Alarme -->
       <a-entity
@@ -55,13 +57,14 @@
       const alarm = document.querySelector('#alarme');
 
       alarm.addEventListener('click', () => {
-        if (alarm.classList.contains('triggered')) return; // éviter double clic
+        // empêcher plusieurs clics simultanés
+        if (alarm.classList.contains('triggered')) return;
         alarm.classList.add('triggered');
 
-        // 🔊 Jouer le son
+        // 🔊 Démarrer le son
         alarm.components.sound.playSound();
 
-        // 🔥 Ajouter effet feu : lumière + flamme
+        // 💡 Lumière + flamme
         const flameLight = document.createElement('a-entity');
         flameLight.setAttribute(
           'light',
@@ -88,13 +91,18 @@
           flame.remove();
           flameLight.remove();
           triggerExplosion(alarm.object3D.position);
+
+          // ♻️ Réinitialiser après explosion
+          setTimeout(() => {
+            alarm.classList.remove('triggered'); // redeviens cliquable
+          }, 1500);
         }, 3000);
       });
 
       function triggerExplosion(pos3D) {
         const scene = document.querySelector('a-scene');
 
-        // 🔽 Position de l'explosion légèrement plus basse
+        // Position légèrement plus basse
         const pos = {
           x: pos3D.x,
           y: pos3D.y - 10,
