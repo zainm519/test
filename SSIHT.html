@@ -8,16 +8,27 @@
   <body>
     <a-scene>
       <!-- 🎞️ Assets -->
-    <a-assets>
-    <video id="flux-video" autoplay loop="true" muted src="Flux-Video.mp4"></video>
-    </a-assets>
+      <a-assets>
+        <video id="flux-video" autoplay="false" loop="true" muted src="Flux-Video.mp4"></video>
+
         <a-asset-item id="alar" src="./alarme.glb"></a-asset-item>
         <a-asset-item id="survpas" src="./surveillance_camerapaspied.glb"></a-asset-item>
         <a-asset-item id="surv" src="./surveillance_camerapied.glb"></a-asset-item>
         <img id="salless" src="./sallessihtb.jpg" />
         <audio id="alarmsound" src="./alarme-342932.mp3" preload="auto"></audio>
       </a-assets>
-<a-video src="#flux-video" width="16" height="9" position="-2.2995 -5.90513 8.79376" rotation="0.32945073220022336 -174.6043044037573 5.967928394082655" scale="0.22282 0.22972 1"></a-video>
+
+      <!-- 🎬 Écran vidéo -->
+      <a-video
+        id="videoScreen"
+        src="#flux-video"
+        width="16"
+        height="9"
+        position="-2.2995 -5.90513 8.79376"
+        rotation="0.32945 -174.604 5.9679"
+        scale="0.22282 0.22972 1"
+      ></a-video>
+
       <!-- 🌌 Ciel -->
       <a-sky src="#salless"></a-sky>
 
@@ -26,7 +37,7 @@
         <a-entity cursor="rayOrigin: mouse"></a-entity>
       </a-entity>
 
-      <!-- 🎥 Caméra fixe -->
+      <!-- 🎥 Caméras -->
       <a-entity
         id="surv"
         gltf-model="#surv"
@@ -35,7 +46,6 @@
         rotation="-17.79 -33.49 11.10"
       ></a-entity>
 
-      <!-- 🎥 Caméra pivotante (animation gauche-droite) -->
       <a-entity
         id="survpas"
         gltf-model="#survpas"
@@ -55,9 +65,37 @@
         class="clickable"
         sound="src: #alarmsound; autoplay: false; volume: 2"
       ></a-entity>
+
+      <!-- 📦 Boîte d’activation vidéo -->
+      <a-box
+        id="videoBox"
+        position="0 1 -3"
+        depth="1"
+        height="1"
+        width="1"
+        color="#4CC3D9"
+        class="clickable"
+        shadow
+      ></a-box>
     </a-scene>
 
     <script>
+      // 🎬 Référence à la vidéo HTML
+      const video = document.querySelector('#flux-video');
+      const videoBox = document.querySelector('#videoBox');
+
+      // ✅ Gestion du clic sur la boîte
+      videoBox.addEventListener('click', () => {
+        if (video.paused) {
+          video.play();
+          videoBox.setAttribute('color', 'green'); // change de couleur quand c'est en lecture
+        } else {
+          video.pause();
+          videoBox.setAttribute('color', '#4CC3D9'); // revient à la couleur d'origine
+        }
+      });
+
+      // === Code de ton alarme inchangé ===
       const alarm = document.querySelector('#alarme');
       const ACTIVE_TINT = 0xff7700;
 
