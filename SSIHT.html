@@ -18,7 +18,16 @@
         <audio id="alarmsound" src="./alarme-342932.mp3" preload="auto"></audio>
       </a-assets>
 
-      <!-- 🎬 Écran vidéo -->
+      <!-- 🎬 Écran vidéo avec boîte cliquable -->
+      <a-box
+        id="videoBox"
+        position="-2.3 -5.9 8.8"
+        rotation="0.33 -174.6 5.96"
+        depth="0.1"
+        height="5"
+        width="9"
+        color="#4CC3D9"
+      ></a-box>
       <a-video
         id="videoScreen"
         src="#flux-video"
@@ -65,27 +74,26 @@
         class="clickable"
         sound="src: #alarmsound; autoplay: false; volume: 2"
       ></a-entity>
-      
+    </a-scene>
+
     <script>
-      // 🎬 Référence à la vidéo HTML
+      // --- Gestion de la vidéo ---
       const video = document.querySelector('#flux-video');
       const videoBox = document.querySelector('#videoBox');
 
-      // ✅ Gestion du clic sur la boîte
       videoBox.addEventListener('click', () => {
         if (video.paused) {
           video.play();
-          videoBox.setAttribute('color', 'green'); // change de couleur quand c'est en lecture
+          videoBox.setAttribute('color', 'green');
         } else {
           video.pause();
-          videoBox.setAttribute('color', '#4CC3D9'); // revient à la couleur d'origine
+          videoBox.setAttribute('color', '#4CC3D9');
         }
       });
 
-      // === Code de ton alarme inchangé ===
+      // --- Gestion de l'alarme ---
       const alarm = document.querySelector('#alarme');
       const ACTIVE_TINT = 0xff7700;
-
       alarm._originalMaterials = null;
 
       alarm.addEventListener('model-loaded', () => {
@@ -96,11 +104,11 @@
         const root = alarm.getObject3D('mesh');
         if (!root) return;
         const originals = [];
-        root.traverse((node) => {
+        root.traverse(node => {
           if (node.isMesh) {
             const mat = node.material;
             if (Array.isArray(mat)) {
-              originals.push({ uuid: node.uuid, material: mat.map((m) => m.clone()) });
+              originals.push({ uuid: node.uuid, material: mat.map(m => m.clone()) });
             } else {
               originals.push({ uuid: node.uuid, material: mat.clone() });
             }
@@ -112,11 +120,11 @@
       function tintAlarm(color) {
         const root = alarm.getObject3D('mesh');
         if (!root) return;
-        root.traverse((node) => {
+        root.traverse(node => {
           if (node.isMesh) {
             const mats = node.material;
             if (Array.isArray(mats)) {
-              mats.forEach((m) => {
+              mats.forEach(m => {
                 if (m.color) m.color.set(color);
                 if (m.emissive) m.emissive.set(color);
               });
@@ -132,12 +140,12 @@
       function restoreOriginalMaterials() {
         const root = alarm.getObject3D('mesh');
         if (!root || !alarm._originalMaterials) return;
-        root.traverse((node) => {
+        root.traverse(node => {
           if (node.isMesh) {
-            const orig = alarm._originalMaterials.find((o) => o.uuid === node.uuid);
+            const orig = alarm._originalMaterials.find(o => o.uuid === node.uuid);
             if (orig) {
               if (Array.isArray(orig.material)) {
-                node.material = orig.material.map((m) => m.clone());
+                node.material = orig.material.map(m => m.clone());
               } else {
                 node.material = orig.material.clone();
               }
