@@ -2,12 +2,12 @@
 <html lang="fr">
   <head>
     <meta charset="UTF-8" />
-    <title>Alarme réinitialisable (sans voyant)</title>
+    <title>Alarme + Caméra Animée</title>
     <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
   </head>
   <body>
     <a-scene>
-      <!-- Assets -->
+      <!-- 🎞️ Assets -->
       <a-assets>
         <a-asset-item id="alar" src="./alarme.glb"></a-asset-item>
         <a-asset-item id="survpas" src="./surveillance_camerapaspied.glb"></a-asset-item>
@@ -16,13 +16,15 @@
         <audio id="alarmsound" src="./alarme-342932.mp3" preload="auto"></audio>
       </a-assets>
 
-      <!-- Décor / Caméra -->
+      <!-- 🌌 Ciel -->
       <a-sky src="#salless"></a-sky>
 
+      <!-- 🎥 Caméra du joueur -->
       <a-entity camera position="0 1.6 0" look-controls>
         <a-entity cursor="rayOrigin: mouse"></a-entity>
       </a-entity>
 
+      <!-- 🎥 Caméra fixe -->
       <a-entity
         id="surv"
         gltf-model="#surv"
@@ -31,19 +33,17 @@
         rotation="-17.79 -33.49 11.10"
       ></a-entity>
 
+      <!-- 🎥 Caméra pivotante (animation gauche-droite) -->
       <a-entity
         id="survpas"
         gltf-model="#survpas"
-        position="-29.968 16.861 46.818"
-        scale="15 15 15"
-        rotation="7.950 141.535 -4.905"
+        position="-4.74865 3.94615 7.22221"
+        scale="2.5 2.5 2.5"
+        rotation="17.39 147.23 -1.12"
+        animation="property: rotation; dir: alternate; dur: 4000; easing: easeInOutSine; to: 17.39 167.23 -1.12; loop: true"
       ></a-entity>
 
-<a-entity light="intensity: 40" 
-  position="-0.34523 3.25948 -2.58665">  
-  </a-entity>
-     
-      <!-- Alarme (GLB) -->
+      <!-- 🔔 Alarme -->
       <a-entity
         id="alarme"
         gltf-model="#alar"
@@ -57,49 +57,39 @@
 
     <script>
       const alarm = document.querySelector('#alarme');
-      const ACTIVE_TINT = 0xff7700; // teinte quand activée (orange)
-//      const ACTIVE_TINT = 'orange'; // alternative chaîne possible
+      const ACTIVE_TINT = 0xff7700;
 
-      // stockage des matériaux originaux (par uuid de mesh)
       alarm._originalMaterials = null;
 
-      // sauvegarde des matériaux originaux quand le modèle est chargé
       alarm.addEventListener('model-loaded', () => {
         saveOriginalMaterials();
       });
-
-      // si le modèle est déjà chargé avant l'ajout de l'événement
-      if (alarm.getObject3D && alarm.getObject3D('mesh')) {
-        saveOriginalMaterials();
-      }
 
       function saveOriginalMaterials() {
         const root = alarm.getObject3D('mesh');
         if (!root) return;
         const originals = [];
-        root.traverse(node => {
+        root.traverse((node) => {
           if (node.isMesh) {
             const mat = node.material;
             if (Array.isArray(mat)) {
-              originals.push({ uuid: node.uuid, material: mat.map(m => m.clone()) });
+              originals.push({ uuid: node.uuid, material: mat.map((m) => m.clone()) });
             } else {
               originals.push({ uuid: node.uuid, material: mat.clone() });
             }
           }
         });
         alarm._originalMaterials = originals;
-        // console.log('Original materials saved', originals.length);
       }
 
-      // applique une teinte/emissive à tous les Mesh du modèle
       function tintAlarm(color) {
         const root = alarm.getObject3D('mesh');
         if (!root) return;
-        root.traverse(node => {
+        root.traverse((node) => {
           if (node.isMesh) {
             const mats = node.material;
             if (Array.isArray(mats)) {
-              mats.forEach(m => {
+              mats.forEach((m) => {
                 if (m.color) m.color.set(color);
                 if (m.emissive) m.emissive.set(color);
               });
@@ -107,22 +97,20 @@
               if (mats.color) mats.color.set(color);
               if (mats.emissive) mats.emissive.set(color);
             }
-            // forcer la mise à jour si nécessaire
             node.material.needsUpdate = true;
           }
         });
       }
 
-      // restaure les matériaux originaux (en clonant pour éviter réutilisation d'instances)
       function restoreOriginalMaterials() {
         const root = alarm.getObject3D('mesh');
         if (!root || !alarm._originalMaterials) return;
-        root.traverse(node => {
+        root.traverse((node) => {
           if (node.isMesh) {
-            const orig = alarm._originalMaterials.find(o => o.uuid === node.uuid);
+            const orig = alarm._originalMaterials.find((o) => o.uuid === node.uuid);
             if (orig) {
               if (Array.isArray(orig.material)) {
-                node.material = orig.material.map(m => m.clone());
+                node.material = orig.material.map((m) => m.clone());
               } else {
                 node.material = orig.material.clone();
               }
@@ -132,45 +120,44 @@
         });
       }
 
-      // click handler : joue l'animation, explosion, puis restore et re-cliquable
       alarm.addEventListener('click', () => {
-        if (alarm.classList.contains('triggered')) return; // éviter double activation
+        if (alarm.classList.contains('triggered')) return;
         alarm.classList.add('triggered');
 
-        // si les matériaux originaux ne sont pas encore sauvegardés, tente une sauvegarde rapide
-        if (!alarm._originalMaterials && alarm.getObject3D && alarm.getObject3D('mesh')) {
-          saveOriginalMaterials();
-        }
+        if (!alarm._originalMaterials) saveOriginalMaterials();
 
-        // 1) teinte active (change directement les matériaux du GLB)
         tintAlarm(ACTIVE_TINT);
 
-        // 2) jouer le son (si le composant sound est présent)
         if (alarm.components && alarm.components.sound) {
-          try { alarm.components.sound.playSound(); } catch (e) { /* ignore */ }
+          alarm.components.sound.playSound();
         }
 
-        // 3) effets locaux : lumière + flamme
         const flameLight = document.createElement('a-entity');
-        flameLight.setAttribute('light', 'type: point; intensity: 2.0; color: orange; distance: 10; decay: 2');
+        flameLight.setAttribute(
+          'light',
+          'type: point; intensity: 2.0; color: orange; distance: 10; decay: 2'
+        );
         flameLight.setAttribute('position', '0 3 0');
         alarm.appendChild(flameLight);
 
         const flame = document.createElement('a-sphere');
         flame.setAttribute('position', '0 3 0');
         flame.setAttribute('radius', '1.5');
-        flame.setAttribute('material', 'color: orange; emissive: red; opacity: 0.6; transparent: true');
-        flame.setAttribute('animation', 'property: scale; to: 1.3 1.5 1.3; dir: alternate; dur: 200; loop: true');
+        flame.setAttribute(
+          'material',
+          'color: orange; emissive: red; opacity: 0.6; transparent: true'
+        );
+        flame.setAttribute(
+          'animation',
+          'property: scale; to: 1.3 1.5 1.3; dir: alternate; dur: 200; loop: true'
+        );
         alarm.appendChild(flame);
 
-        // 4) explosion après 3s
         setTimeout(() => {
           flame.remove();
           flameLight.remove();
           triggerExplosion(alarm.object3D.position);
 
-          // 5) restaurer les matériaux d'origine et rendre l'alarme cliquable après la fin des effets
-          // délai un peu supérieur à la durée des effets (débris, fade, etc.)
           setTimeout(() => {
             restoreOriginalMaterials();
             alarm.classList.remove('triggered');
@@ -178,24 +165,26 @@
         }, 3000);
       });
 
-      // fonction d'explosion (identique à ton souhait précédent)
       function triggerExplosion(pos3D) {
         const scene = document.querySelector('a-scene');
-
-        const pos = {
-          x: pos3D.x,
-          y: pos3D.y - 10,
-          z: pos3D.z
-        };
+        const pos = { x: pos3D.x, y: pos3D.y - 10, z: pos3D.z };
 
         const blast = document.createElement('a-sphere');
         blast.setAttribute('position', `${pos.x} ${pos.y} ${pos.z}`);
         blast.setAttribute('radius', '2');
-        blast.setAttribute('material', 'color: orange; emissive: red; opacity: 0.9; transparent: true');
-        blast.setAttribute('animation__scale', 'property: scale; to: 15 15 15; dur: 500; easing: easeOutQuad');
-        blast.setAttribute('animation__fade', 'property: material.opacity; to: 0; dur: 600; delay: 200');
+        blast.setAttribute(
+          'material',
+          'color: orange; emissive: red; opacity: 0.9; transparent: true'
+        );
+        blast.setAttribute(
+          'animation__scale',
+          'property: scale; to: 15 15 15; dur: 500; easing: easeOutQuad'
+        );
+        blast.setAttribute(
+          'animation__fade',
+          'property: material.opacity; to: 0; dur: 600; delay: 200'
+        );
         scene.appendChild(blast);
-
         setTimeout(() => blast.remove(), 1200);
 
         for (let i = 0; i < 10; i++) {
@@ -216,11 +205,16 @@
           const targetY = pos.y + 5 + vy;
           const targetZ = pos.z + vz;
 
-          debris.setAttribute('animation__move', `property: position; to: ${targetX} ${targetY} ${targetZ}; dur: 1000`);
-          debris.setAttribute('animation__fade', 'property: material.opacity; to: 0; dur: 800; delay: 300');
+          debris.setAttribute(
+            'animation__move',
+            `property: position; to: ${targetX} ${targetY} ${targetZ}; dur: 1000`
+          );
+          debris.setAttribute(
+            'animation__fade',
+            'property: material.opacity; to: 0; dur: 800; delay: 300'
+          );
 
           scene.appendChild(debris);
-
           setTimeout(() => debris.remove(), 1500);
         }
       }
