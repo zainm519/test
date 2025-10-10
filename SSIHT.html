@@ -2,7 +2,7 @@
 <html lang="fr">
   <head>
     <meta charset="UTF-8" />
-    <title>Alarme Réinitialisable avec Explosion</title>
+    <title>Alarme Réinitialisable avec Indicateur Lumineux</title>
     <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
   </head>
   <body>
@@ -41,7 +41,7 @@
         rotation="17.39 147.23 -1.12"
       ></a-entity>
 
-      <!-- 🔔 Alarme -->
+      <!-- 🔔 Alarme avec voyant -->
       <a-entity
         id="alarme"
         gltf-model="#alar"
@@ -50,22 +50,31 @@
         rotation="0 120 0"
         class="clickable"
         sound="src: #alarmsound; autoplay: false; volume: 2"
-        material="color: red"
-      ></a-entity>
+      >
+        <!-- 💡 voyant coloré (rouge d’origine) -->
+        <a-sphere
+          id="voyant"
+          position="0 4 0"
+          radius="0.5"
+          material="color: red; emissive: red; emissiveIntensity: 0.4"
+        ></a-sphere>
+      </a-entity>
     </a-scene>
 
     <script>
       const alarm = document.querySelector('#alarme');
-      const originalColor = 'red'; // couleur d'origine
-      const activeColor = 'orange'; // couleur pendant activation
+      const voyant = document.querySelector('#voyant');
 
       alarm.addEventListener('click', () => {
-        // éviter double clic pendant animation
+        // empêcher double clic
         if (alarm.classList.contains('triggered')) return;
         alarm.classList.add('triggered');
 
-        // 🟥 changer la couleur pour signaler l'activation
-        alarm.setAttribute('material', `color: ${activeColor}`);
+        // 🟠 couleur active
+        voyant.setAttribute(
+          'material',
+          'color: orange; emissive: orange; emissiveIntensity: 1'
+        );
 
         // 🔊 jouer le son
         alarm.components.sound.playSound();
@@ -98,9 +107,12 @@
           flameLight.remove();
           triggerExplosion(alarm.object3D.position);
 
-          // ♻️ remettre couleur d'origine et re-cliquable
+          // ♻️ après explosion : voyant rouge + re-cliquable
           setTimeout(() => {
-            alarm.setAttribute('material', `color: ${originalColor}`);
+            voyant.setAttribute(
+              'material',
+              'color: red; emissive: red; emissiveIntensity: 0.4'
+            );
             alarm.classList.remove('triggered');
           }, 1500);
         }, 3000);
