@@ -10,6 +10,7 @@
       <!-- 🎞️ Assets -->
       <a-assets>
         <video id="flux-video" autoplay="false" loop="true" muted src="Flux-Video.mp4"></video>
+        <video id="video-survpas" autoplay="false" loop="true" muted src="./ALCE5581.mp4"></video>
 
         <a-asset-item id="alar" src="./alarme.glb"></a-asset-item>
         <a-asset-item id="survpas" src="./surveillance_camerapaspied.glb"></a-asset-item>
@@ -18,18 +19,19 @@
         <audio id="alarmsound" src="./alarme-342932.mp3" preload="auto"></audio>
       </a-assets>
 
-      <!-- 🎬 Écran vidéo avec boîte cliquable -->
+      <!-- 🎬 Écran vidéo principal -->
       <a-box
-      id="videoBox"
-      class="clickable"
-      position="-2.69713 -6.8796 10.12757"
-      rotation="0.33 -174.6 5.96"
-      depth="0.1"
-      height="5"
-      width="9"
-      color="#4CC3D9"
-      scale="0.41698 0.30914 0.73785">
+        id="videoBox"
+        class="clickable"
+        position="-2.69713 -6.8796 10.12757"
+        rotation="0.33 -174.6 5.96"
+        depth="0.1"
+        height="5"
+        width="9"
+        color="#4CC3D9"
+        scale="0.41698 0.30914 0.73785">
       </a-box>
+
       <a-video
         id="videoScreen"
         src="#flux-video"
@@ -38,6 +40,18 @@
         position="-2.2995 -5.90513 8.79376"
         rotation="0.32945 -174.604 5.9679"
         scale="0.22282 0.22972 1"
+      ></a-video>
+
+      <!-- 🎬 Second écran vidéo (collé à droite du premier) -->
+      <a-video
+        id="videoScreen2"
+        src="#video-survpas"
+        width="16"
+        height="9"
+        position="1.5 -5.90513 8.79376"
+        rotation="0.32945 -174.604 5.9679"
+        scale="0.22282 0.22972 1"
+        visible="false"
       ></a-video>
 
       <!-- 🌌 Ciel -->
@@ -79,7 +93,7 @@
     </a-scene>
 
     <script>
-      // --- Gestion de la vidéo ---
+      // --- Gestion de la vidéo principale ---
       const video = document.querySelector('#flux-video');
       const videoBox = document.querySelector('#videoBox');
 
@@ -90,6 +104,21 @@
         } else {
           video.pause();
           videoBox.setAttribute('color', '#4CC3D9');
+        }
+      });
+
+      // --- Gestion de la vidéo de survpas ---
+      const survpas = document.querySelector('#survpas');
+      const videoSurvpas = document.querySelector('#video-survpas');
+      const videoScreen2 = document.querySelector('#videoScreen2');
+
+      survpas.addEventListener('click', () => {
+        if (!videoScreen2.getAttribute('visible')) {
+          videoScreen2.setAttribute('visible', true);
+          videoSurvpas.play();
+        } else {
+          videoSurvpas.pause();
+          videoScreen2.setAttribute('visible', false);
         }
       });
 
