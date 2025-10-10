@@ -23,7 +23,7 @@
       <a-box
         id="videoBox"
         class="clickable"
-        position="-2.69713 -6.8796 10.12757"
+        position="-2.3 -5.9 8.5"
         rotation="0.33 -174.6 5.96"
         depth="0.1"
         height="5"
@@ -112,10 +112,23 @@
       const videoSurvpas = document.querySelector('#video-survpas');
       const videoScreen2 = document.querySelector('#videoScreen2');
 
+      // Charger la vidéo dès le début pour éviter les blocages
+      videoSurvpas.load();
+
       survpas.addEventListener('click', () => {
-        if (!videoScreen2.getAttribute('visible')) {
+        const isVisible = videoScreen2.getAttribute('visible');
+        if (!isVisible) {
           videoScreen2.setAttribute('visible', true);
-          videoSurvpas.play();
+
+          // Tentative de lecture sécurisée
+          const playPromise = videoSurvpas.play();
+          if (playPromise !== undefined) {
+            playPromise.catch(err => {
+              console.warn('Lecture automatique bloquée, tentative forcée :', err);
+              videoSurvpas.muted = true;
+              videoSurvpas.play();
+            });
+          }
         } else {
           videoSurvpas.pause();
           videoScreen2.setAttribute('visible', false);
