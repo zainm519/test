@@ -19,29 +19,30 @@
         <img id="salless" src="sallessihtb.jpg" />
         <img id="offline-img" src="OFFLINE.jpg" />
         <audio id="alarmsound" src="alarme-342932.mp3" preload="auto"></audio>
-        <video id="shidou" class= "clickable" autoplay loop="true" src="ALCE5581.mp4"></video>
+        <video id="shidou" class="clickable" autoplay loop="true" src="ALCE5581.mp4"></video>
       </a-assets>
+
       <a-video src="#shidou" width="16" height="9" position="-50.91189 -28.66231 49.60279" rotation="0 180 0"></a-video>
-  <!-- Defining the URL inline. Not recommended but more comfortable for web developers. -->
-  <a-video src="ALCE5581.mp4"></a-video>
+      <a-video src="ALCE5581.mp4"></a-video>
    
-      <!-- Bouton tik -->
-    <a-obj-model id="videoButton" 
-      class="clickable" 
-      src="#butin" 
-      position="-12.71124 -19.40063 19.98393" 
-      material="color: #ff0000"
-      rotation="-90.87416 175.99985 175.99985"
-      scale="0.03495522870314175 0.03495522870314175 0.03495522870314175">
+      <!-- 🔴 Bouton principal -->
+      <a-obj-model id="videoButton" 
+        class="clickable" 
+        src="#butin" 
+        position="-12.71124 -19.40063 19.98393" 
+        material="color: #ff0000"
+        rotation="-90.87416 175.99985 175.99985"
+        scale="0.03495522870314175 0.03495522870314175 0.03495522870314175">
       </a-obj-model>
       
- <a-obj-model id="videoButton"
-   class="clickable"
-   src="#bouton"
-   position="-19.42891 -19.40063 24.85667"
-   material="color: #ff80c0"
-   rotation="-89.87416 179.99985 179.99985"
-   scale="0.03 0.03 0.03">
+      <!-- 💗 Bouton rose (ALCE5581) -->
+      <a-obj-model id="boutonRose"
+        class="clickable"
+        src="#bouton"
+        position="-19.42891 -19.40063 24.85667"
+        material="color: #ff80c0"
+        rotation="-89.87416 179.99985 179.99985"
+        scale="0.03 0.03 0.03">
       </a-obj-model>
       
       <!-- 🎬 Écran principal -->
@@ -67,7 +68,7 @@
         visible="false">
       </a-image>
 
-      <!-- 🎬 Écran secondaire (survpas) -->
+      <!-- 🎬 Écran secondaire (survpas / ALCE5581) -->
       <a-video
         id="videoScreen2"
         src="#ALCE5581.mp4"
@@ -105,7 +106,7 @@
     </a-scene>
 
     <script>
-      // --- 🔴 Gestion du bouton principal (OFFLINE + vidéo principale) ---
+      // --- 🔴 Bouton principal (OFFLINE + vidéo principale) ---
       const video = document.querySelector('#flux-video');
       const videoButton = document.querySelector('#videoButton');
       const offlineImage = document.querySelector('#offlineImage');
@@ -129,44 +130,39 @@
         }
       });
 
-      // --- 🎬 Gestion de la vidéo de survpas ---
-      const survpas = document.querySelector('#survpas');
-      const videoSurvpas = document.querySelector('#video-survpas');
-      const videoScreen2 = document.querySelector('#videoScreen2');
-      videoSurvpas.load();
-
+      // --- 💗 Bouton rose : lecture / pause vidéo ALCE5581 avec son ---
+      const boutonRose = document.querySelector('#boutonRose');
+      const videoALCE = document.querySelector('#video-survpas');
+      const videoScreenALCE = document.querySelector('#videoScreen2');
       let wasMutedByBrowser = false;
 
-      // Si la vidéo est déjà en lecture, garder l’écran visible
-      if (!videoSurvpas.paused && videoSurvpas.currentTime > 0) {
-        videoScreen2.setAttribute('visible', true);
-      }
+      boutonRose.addEventListener('click', () => {
+        if (videoALCE.paused) {
+          // ▶️ Lecture
+          videoScreenALCE.setAttribute('visible', true);
+          boutonRose.setAttribute('material', 'color: #00ff80');
+          boutonRose.setAttribute(
+            'animation__pulse',
+            'property: scale; to: 0.032 0.032 0.032; dir: alternate; dur: 600; loop: true; easing: easeInOutSine'
+          );
+          videoALCE.muted = false;
 
-      survpas.addEventListener('click', () => {
-        const isVisible = videoScreen2.getAttribute('visible');
-
-        if (!isVisible) {
-          videoScreen2.setAttribute('visible', true);
-
-          if (wasMutedByBrowser) {
-            videoSurvpas.muted = false;
-            console.log('🔊 Son réactivé.');
-          }
-
-          const playPromise = videoSurvpas.play();
+          const playPromise = videoALCE.play();
           if (playPromise !== undefined) {
-            playPromise
-              .then(() => console.log('🎥 Vidéo surveillance en lecture.'))
-              .catch(err => {
-                console.warn('🔇 Lecture bloquée, activation du mode muet :', err);
-                videoSurvpas.muted = true;
-                wasMutedByBrowser = true;
-                videoSurvpas.play();
-              });
+            playPromise.catch(err => {
+              console.warn('🔇 Lecture bloquée, activation du mode muet :', err);
+              videoALCE.muted = true;
+              wasMutedByBrowser = true;
+              videoALCE.play();
+            });
           }
         } else {
-          videoSurvpas.pause();
-          videoScreen2.setAttribute('visible', false);
+          // ⏸️ Pause
+          videoALCE.pause();
+          videoScreenALCE.setAttribute('visible', false);
+          boutonRose.setAttribute('material', 'color: #ff80c0');
+          boutonRose.removeAttribute('animation__pulse');
+          videoALCE.muted = true;
         }
       });
 
