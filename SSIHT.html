@@ -7,97 +7,77 @@
   </head>
   <body>
     <a-scene>
-      <!-- 🎞️ Assets -->
-      <a-assets>
-        <video id="flux-video" autoplay="false" loop="true" muted src="Flux-Video.mp4"></video>
-        <video id="video-survpas" autoplay="false" loop="true" src="ALCE5581.mp4"></video>
-        <a-asset-item id="bouton" src="bouton-camera.obj"></a-asset-item>
-        <a-asset-item id="alar" src="alarme.glb"></a-asset-item>
-        <a-asset-item id="survpas" src="surveillance_camerapaspied.glb"></a-asset-item>
-        <a-asset-item id="surv" src="surveillance_camerapied.glb"></a-asset-item>
-        <img id="salless" src="sallessihtb.jpg" />
-        <img id="offline-img" src="OFFLINE.jpg" />
-        <audio id="alarmsound" src="alarme-342932.mp3" preload="auto"></audio>
-      </a-assets>
-    <video id="shidou" class= "clickable" autoplay loop="true" src="ALCE5581.mp4"></video>
+  <!-- 🎞️ Assets -->
+  <a-assets>
+    <video id="flux-video" autoplay="false" loop="true" muted src="Flux-Video.mp4"></video>
+    <video id="video-survpas" autoplay="false" loop="true" src="ALCE5581.mp4"></video>
+    <a-asset-item id="bouton" src="bouton-camera.obj"></a-asset-item>
+    <a-asset-item id="alar" src="alarme.glb"></a-asset-item>
+    <a-asset-item id="survpas" src="surveillance_camerapaspied.glb"></a-asset-item>
+    <a-asset-item id="surv" src="surveillance_camerapied.glb"></a-asset-item>
+    <img id="salless" src="sallessihtb.jpg" />
+    <img id="offline-img" src="OFFLINE.jpg" />
+    <audio id="alarmsound" src="alarme-342932.mp3" preload="auto"></audio>
   </a-assets>
 
-  <!-- Using the asset management system. -->
-  <a-video src="#shidou" width="16" height="9" position="0 0 -20"></a-video>
-
-  <!-- Defining the URL inline. Not recommended but more comfortable for web developers. -->
-  <a-video src="ALCE5581.mp4"></a-video>
-     
   <!-- 🔴 Bouton principal -->
-      <a-obj-model
-        id="videoButton"
-        class="clickable"
-        src="#bouton"
-        position="-9.52687 -19.40063 19.98393"
-        material="color: #ff0000"
-        rotation="-89.87416 179.99985 179.99985"
-        scale="0.03 0.03 0.03">
-      </a-obj-model>
+  <a-obj-model
+    id="videoButton"
+    class="clickable"
+    src="#bouton"
+    position="-9.52687 -19.40063 19.98393"
+    material="color: #ff0000"
+    rotation="-89.87416 179.99985 179.99985"
+    scale="0.03 0.03 0.03">
+  </a-obj-model>
 
-      <!-- 🎬 Écran principal -->
-      <a-video
-        id="videoScreen"
-        src="#flux-video"
-        width="16"
-        height="9"
-        position="-2.2995 -5.90513 8.79376"
-        rotation="0.32945 -174.604 5.9679"
-        scale="0.22282 0.22972 1">
-      </a-video>
+  <!-- 🎬 Écran principal -->
+  <a-video
+    id="videoScreen"
+    src="#flux-video"
+    width="16"
+    height="9"
+    position="-2.2995 -5.90513 8.79376"
+    rotation="0.32945 -174.604 5.9679"
+    scale="0.22282 0.22972 1">
+  </a-video>
 
-      <!-- 🖼️ Image OFFLINE -->
-      <a-image
-        id="offlineImage"
-        src="#offline-img"
-        width="16"
-        height="9"
-        position="-2.2995 -5.90513 8.79376"
-        rotation="0.32945 -174.604 5.9679"
-        scale="0.22282 0.22972 1"
-        visible="false">
-      </a-image>
+  <!-- 🎬 Écran secondaire (survpas) -->
+  <a-video
+    id="videoScreen2"
+    src="#video-survpas"
+    width="16"
+    height="9"
+    position="1.5 -5.90513 8.79376"
+    rotation="0.32945 -174.604 5.9679"
+    scale="0.22282 0.22972 1"
+    visible="false">
+  </a-video>
 
-      <!-- 🎬 Écran secondaire (survpas) -->
-      <a-video
-        id="videoScreen2"
-        src="#ALCE5581.mp4"
-        width="16"
-        height="9"
-        position="1.5 -5.90513 8.79376"
-        rotation="0.32945 -174.604 5.9679"
-        scale="0.22282 0.22972 1"
-        visible="false">
-      </a-video>
+  <!-- 🌌 Ciel -->
+  <a-sky src="#salless"></a-sky>
 
-      <!-- 🌌 Ciel -->
-      <a-sky src="#salless"></a-sky>
+  <!-- 🎥 Caméra -->
+  <a-entity camera position="0 1.6 0" look-controls>
+    <a-entity cursor="rayOrigin: mouse"></a-entity>
+  </a-entity>
 
-      <!-- 🎥 Caméra du joueur -->
-      <a-entity camera position="0 1.6 0" look-controls>
-        <a-entity cursor="rayOrigin: mouse"></a-entity>
-      </a-entity>
+  <!-- 🎥 Caméras 3D -->
+  <a-entity id="survpas" gltf-model="#survpas"
+    position="-4.74865 3.94615 7.22221"
+    scale="2.5 2.5 2.5"
+    rotation="17.39 147.23 -1.12"
+    animation="property: rotation; dir: alternate; dur: 2000; easing: easeInOutSine;
+    to: 17.39 167.23 -1.12; loop: true"
+    class="clickable"></a-entity>
 
-      <!-- 🎥 Caméras -->
-      <a-entity id="surv" gltf-model="#surv" position="-31.71937 19.99428 49.34695"
-        scale="15 15 15" rotation="-17.79 -33.49 11.10"></a-entity>
+  <!-- 🔔 Alarme -->
+  <a-entity id="alarme" gltf-model="#alar"
+    position="-13.79992 -30.02283 22.72893"
+    scale="13 13 13" rotation="0 120 0"
+    class="clickable" sound="src: #alarmsound; autoplay: false; volume: 2"></a-entity>
+</a-scene>
 
-      <a-entity id="survpas" gltf-model="#survpas"
-        position="-4.74865 3.94615 7.22221" scale="2.5 2.5 2.5"
-        rotation="17.39 147.23 -1.12"
-        animation="property: rotation; dir: alternate; dur: 2000; easing: easeInOutSine;
-        to: 17.39 167.23 -1.12; loop: true"></a-entity>
-
-      <!-- 🔔 Alarme -->
-      <a-entity id="alarme" gltf-model="#alar"
-        position="-13.79992 -30.02283 22.72893"
-        scale="13 13 13" rotation="0 120 0"
-        class="clickable" sound="src: #alarmsound; autoplay: false; volume: 2"></a-entity>
-    </a-scene>
 
     <script>
       // --- 🔴 Gestion du bouton principal (OFFLINE + vidéo principale) ---
