@@ -18,7 +18,7 @@
         <a-asset-item id="surv" src="./surveillance_camerapied.glb"></a-asset-item>
 
         <img id="salless" src="./sallessihtb.jpg" />
-        <img id="offline-img" src="./OFFLINE.jpg" /> <!-- 🆕 Image OFFLINE -->
+        <img id="offline-img" src="./OFFLINE.jpg" /> <!-- 🆕 Image noire -->
         <audio id="alarmsound" src="./alarme-342932.mp3" preload="auto"></audio>
       </a-assets>
 
@@ -44,7 +44,7 @@
         scale="0.22282 0.22972 1">
       </a-video>
 
-      <!-- 🖼️ Image OFFLINE superposée -->
+      <!-- 🖼️ Image OFFLINE (superposée à la vidéo) -->
       <a-image
         id="offlineImage"
         src="#offline-img"
@@ -72,7 +72,7 @@
       <!-- 🌌 Ciel -->
       <a-sky src="#salless"></a-sky>
 
-      <!-- 🎥 Caméra -->
+      <!-- 🎥 Caméra du joueur -->
       <a-entity camera position="0 1.6 0" look-controls>
         <a-entity cursor="rayOrigin: mouse"></a-entity>
       </a-entity>
@@ -108,16 +108,16 @@
     </a-scene>
 
     <script>
-      // --- 🔴 Bouton vidéo principal + image OFFLINE ---
+      // --- 🎬 Gestion du bouton rouge avec l'image OFFLINE ---
       const video = document.querySelector('#flux-video');
       const videoButton = document.querySelector('#videoButton');
       const offlineImage = document.querySelector('#offlineImage');
+      let isOffline = false;
 
       videoButton.addEventListener('click', () => {
-        const isOfflineVisible = offlineImage.getAttribute('visible');
+        isOffline = !isOffline;
 
-        if (!isOfflineVisible) {
-          // Passe en mode OFFLINE
+        if (isOffline) {
           offlineImage.setAttribute('visible', true);
           offlineImage.setAttribute('animation__fadein', {
             property: 'material.opacity',
@@ -130,7 +130,6 @@
           videoButton.setAttribute('material', 'color: #ff0000');
           videoButton.removeAttribute('animation__pulse');
         } else {
-          // Reprend la vidéo
           offlineImage.setAttribute('animation__fadeout', {
             property: 'material.opacity',
             from: 1,
@@ -149,7 +148,7 @@
         }
       });
 
-      // --- 🎬 Vidéo de survpas ---
+      // --- 🎬 Gestion de la vidéo de survpas ---
       const survpas = document.querySelector('#survpas');
       const videoSurvpas = document.querySelector('#video-survpas');
       const videoScreen2 = document.querySelector('#videoScreen2');
@@ -173,11 +172,10 @@
         }
       });
 
-      // --- 🔔 Alarme + explosion ---
+      // --- 🔔 Gestion de l'alarme ---
       const alarm = document.querySelector('#alarme');
       const ACTIVE_TINT = 0xff7700;
       alarm._originalMaterials = null;
-
       alarm.addEventListener('model-loaded', () => saveOriginalMaterials());
 
       function saveOriginalMaterials() {
@@ -238,10 +236,8 @@
       alarm.addEventListener('click', () => {
         if (alarm.classList.contains('triggered')) return;
         alarm.classList.add('triggered');
-
         if (!alarm._originalMaterials) saveOriginalMaterials();
         tintAlarm(ACTIVE_TINT);
-
         if (alarm.components && alarm.components.sound) {
           alarm.components.sound.playSound();
         }
@@ -294,10 +290,7 @@
           const vx = Math.cos(angle) * speed;
           const vz = Math.sin(angle) * speed;
           const vy = Math.random() * 10;
-          const targetX = pos.x + vx;
-          const targetY = pos.y + 5 + vy;
-          const targetZ = pos.z + vz;
-          debris.setAttribute('animation__move', `property: position; to: ${targetX} ${targetY} ${targetZ}; dur: 1000`);
+          debris.setAttribute('animation__move', `property: position; to: ${pos.x + vx} ${pos.y + 5 + vy} ${pos.z + vz}; dur: 1000`);
           debris.setAttribute('animation__fade', 'property: material.opacity; to: 0; dur: 800; delay: 300');
           scene.appendChild(debris);
           setTimeout(() => debris.remove(), 1500);
