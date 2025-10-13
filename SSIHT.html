@@ -16,10 +16,11 @@
         <a-asset-item id="survpas" src="./surveillance_camerapaspied.glb"></a-asset-item>
         <a-asset-item id="surv" src="./surveillance_camerapied.glb"></a-asset-item>
         <img id="salless" src="./sallessihtb.jpg" />
+        <img id="offline-img" src="./OFFLINE.jpg" /> <!-- 🆕 Ajout -->
         <audio id="alarmsound" src="./alarme-342932.mp3" preload="auto"></audio>
       </a-assets>
 
-      <!-- 🔴 Bouton 3D qui contrôle la vidéo -->
+      <!-- 🔴 Bouton 3D -->
       <a-obj-model
         id="videoButton"
         class="clickable"
@@ -41,17 +42,17 @@
         scale="0.22282 0.22972 1">
       </a-video>
 
-      <!-- 🎬 Second écran vidéo (collé à droite du premier) -->
-      <a-video
-        id="videoScreen2"
-        src="#video-survpas"
+      <!-- 🖼️ Image OFFLINE (superposée mais cachée au départ) -->
+      <a-image
+        id="offlineImage"
+        src="#offline-img"
         width="16"
         height="9"
-        position="1.5 -5.90513 8.79376"
+        position="-2.2995 -5.90513 8.79376"
         rotation="0.32945 -174.604 5.9679"
         scale="0.22282 0.22972 1"
         visible="false">
-      </a-video>
+      </a-image>
 
       <!-- 🌌 Ciel -->
       <a-sky src="#salless"></a-sky>
@@ -61,218 +62,42 @@
         <a-entity cursor="rayOrigin: mouse"></a-entity>
       </a-entity>
 
-      <!-- 🎥 Caméras -->
-      <a-entity
-        id="surv"
-        gltf-model="#surv"
-        position="-31.71937 19.99428 49.34695"
-        scale="15 15 15"
-        rotation="-17.79 -33.49 11.10">
-      </a-entity>
+      <!-- 🎥 Caméras et alarme (inchangées) -->
+      <a-entity id="surv" gltf-model="#surv" position="-31.71937 19.99428 49.34695" scale="15 15 15" rotation="-17.79 -33.49 11.10"></a-entity>
+      <a-entity id="survpas" gltf-model="#survpas" position="-4.74865 3.94615 7.22221" scale="2.5 2.5 2.5" rotation="17.39 147.23 -1.12"
+        animation="property: rotation; dir: alternate; dur: 2000; easing: easeInOutSine; to: 17.39 167.23 -1.12; loop: true"></a-entity>
 
-      <a-entity
-        id="survpas"
-        gltf-model="#survpas"
-        position="-4.74865 3.94615 7.22221"
-        scale="2.5 2.5 2.5"
-        rotation="17.39 147.23 -1.12"
-        animation="property: rotation; dir: alternate; dur: 2000; easing: easeInOutSine; to: 17.39 167.23 -1.12; loop: true">
-      </a-entity>
-
-      <!-- 🔔 Alarme -->
-      <a-entity
-        id="alarme"
-        gltf-model="#alar"
-        position="-13.79992 -30.02283 22.72893"
-        scale="13 13 13"
-        rotation="0 120 0"
-        class="clickable"
-        sound="src: #alarmsound; autoplay: false; volume: 2">
-      </a-entity>
+      <a-entity id="alarme" gltf-model="#alar" position="-13.79992 -30.02283 22.72893" scale="13 13 13" rotation="0 120 0"
+        class="clickable" sound="src: #alarmsound; autoplay: false; volume: 2"></a-entity>
     </a-scene>
 
     <script>
-      // --- 🔴 Gestion de la vidéo principale avec le bouton rouge ---
+      // --- 🔴 Bouton vidéo + OFFLINE ---
       const video = document.querySelector('#flux-video');
       const videoButton = document.querySelector('#videoButton');
+      const offlineImage = document.querySelector('#offlineImage');
+      const videoScreen = document.querySelector('#videoScreen');
 
       videoButton.addEventListener('click', () => {
-        if (video.paused) {
+        const isOffline = offlineImage.getAttribute('visible');
+
+        if (!isOffline) {
+          // Met en OFFLINE
+          offlineImage.setAttribute('visible', true);
+          video.pause();
+          videoButton.setAttribute('material', 'color: #ff0000');
+          videoButton.removeAttribute('animation__pulse');
+        } else {
+          // Reprend la vidéo
+          offlineImage.setAttribute('visible', false);
           video.play();
-          // Change couleur du bouton + effet pulsation
           videoButton.setAttribute('material', 'color: green');
           videoButton.setAttribute(
             'animation__pulse',
             'property: scale; to: 0.035 0.035 0.035; dir: alternate; dur: 600; loop: true; easing: easeInOutSine'
           );
-        } else {
-          video.pause();
-          // Retour à l'état normal
-          videoButton.setAttribute('material', 'color: #ff0000');
-          videoButton.removeAttribute('animation__pulse');
         }
       });
-
-      // --- 🎬 Gestion de la vidéo de survpas ---
-      const survpas = document.querySelector('#survpas');
-      const videoSurvpas = document.querySelector('#video-survpas');
-      const videoScreen2 = document.querySelector('#videoScreen2');
-      videoSurvpas.load();
-
-      survpas.addEventListener('click', () => {
-        const isVisible = videoScreen2.getAttribute('visible');
-        if (!isVisible) {
-          videoScreen2.setAttribute('visible', true);
-          const playPromise = videoSurvpas.play();
-          if (playPromise !== undefined) {
-            playPromise.catch(err => {
-              console.warn('Lecture automatique bloquée, tentative forcée :', err);
-              videoSurvpas.muted = true;
-              videoSurvpas.play();
-            });
-          }
-        } else {
-          videoSurvpas.pause();
-          videoScreen2.setAttribute('visible', false);
-        }
-      });
-
-      // --- 🔔 Gestion de l'alarme ---
-      const alarm = document.querySelector('#alarme');
-      const ACTIVE_TINT = 0xff7700;
-      alarm._originalMaterials = null;
-
-      alarm.addEventListener('model-loaded', () => saveOriginalMaterials());
-
-      function saveOriginalMaterials() {
-        const root = alarm.getObject3D('mesh');
-        if (!root) return;
-        const originals = [];
-        root.traverse(node => {
-          if (node.isMesh) {
-            const mat = node.material;
-            if (Array.isArray(mat)) {
-              originals.push({ uuid: node.uuid, material: mat.map(m => m.clone()) });
-            } else {
-              originals.push({ uuid: node.uuid, material: mat.clone() });
-            }
-          }
-        });
-        alarm._originalMaterials = originals;
-      }
-
-      function tintAlarm(color) {
-        const root = alarm.getObject3D('mesh');
-        if (!root) return;
-        root.traverse(node => {
-          if (node.isMesh) {
-            const mats = node.material;
-            if (Array.isArray(mats)) {
-              mats.forEach(m => {
-                if (m.color) m.color.set(color);
-                if (m.emissive) m.emissive.set(color);
-              });
-            } else {
-              if (mats.color) mats.color.set(color);
-              if (mats.emissive) mats.emissive.set(color);
-            }
-            node.material.needsUpdate = true;
-          }
-        });
-      }
-
-      function restoreOriginalMaterials() {
-        const root = alarm.getObject3D('mesh');
-        if (!root || !alarm._originalMaterials) return;
-        root.traverse(node => {
-          if (node.isMesh) {
-            const orig = alarm._originalMaterials.find(o => o.uuid === node.uuid);
-            if (orig) {
-              if (Array.isArray(orig.material)) {
-                node.material = orig.material.map(m => m.clone());
-              } else {
-                node.material = orig.material.clone();
-              }
-              node.material.needsUpdate = true;
-            }
-          }
-        });
-      }
-
-      alarm.addEventListener('click', () => {
-        if (alarm.classList.contains('triggered')) return;
-        alarm.classList.add('triggered');
-
-        if (!alarm._originalMaterials) saveOriginalMaterials();
-        tintAlarm(ACTIVE_TINT);
-
-        if (alarm.components && alarm.components.sound) {
-          alarm.components.sound.playSound();
-        }
-
-        const flameLight = document.createElement('a-entity');
-        flameLight.setAttribute('light', 'type: point; intensity: 2.0; color: orange; distance: 10; decay: 2');
-        flameLight.setAttribute('position', '0 3 0');
-        alarm.appendChild(flameLight);
-
-        const flame = document.createElement('a-sphere');
-        flame.setAttribute('position', '0 3 0');
-        flame.setAttribute('radius', '1.5');
-        flame.setAttribute('material', 'color: orange; emissive: red; opacity: 0.6; transparent: true');
-        flame.setAttribute('animation', 'property: scale; to: 1.3 1.5 1.3; dir: alternate; dur: 200; loop: true');
-        alarm.appendChild(flame);
-
-        setTimeout(() => {
-          flame.remove();
-          flameLight.remove();
-          triggerExplosion(alarm.object3D.position);
-
-          setTimeout(() => {
-            restoreOriginalMaterials();
-            alarm.classList.remove('triggered');
-          }, 1600);
-        }, 3000);
-      });
-
-      function triggerExplosion(pos3D) {
-        const scene = document.querySelector('a-scene');
-        const pos = { x: pos3D.x, y: pos3D.y - 10, z: pos3D.z };
-
-        const blast = document.createElement('a-sphere');
-        blast.setAttribute('position', `${pos.x} ${pos.y} ${pos.z}`);
-        blast.setAttribute('radius', '2');
-        blast.setAttribute('material', 'color: orange; emissive: red; opacity: 0.9; transparent: true');
-        blast.setAttribute('animation__scale', 'property: scale; to: 15 15 15; dur: 500; easing: easeOutQuad');
-        blast.setAttribute('animation__fade', 'property: material.opacity; to: 0; dur: 600; delay: 200');
-        scene.appendChild(blast);
-        setTimeout(() => blast.remove(), 1200);
-
-        for (let i = 0; i < 10; i++) {
-          const debris = document.createElement('a-box');
-          debris.setAttribute('position', `${pos.x} ${pos.y + 5} ${pos.z}`);
-          debris.setAttribute('width', '1');
-          debris.setAttribute('height', '1');
-          debris.setAttribute('depth', '1');
-          debris.setAttribute('material', 'color: gray; opacity: 1');
-
-          const angle = Math.random() * Math.PI * 2;
-          const speed = Math.random() * 10 + 2;
-          const vx = Math.cos(angle) * speed;
-          const vz = Math.sin(angle) * speed;
-          const vy = Math.random() * 10;
-
-          const targetX = pos.x + vx;
-          const targetY = pos.y + 5 + vy;
-          const targetZ = pos.z + vz;
-
-          debris.setAttribute('animation__move', `property: position; to: ${targetX} ${targetY} ${targetZ}; dur: 1000`);
-          debris.setAttribute('animation__fade', 'property: material.opacity; to: 0; dur: 800; delay: 300');
-
-          scene.appendChild(debris);
-          setTimeout(() => debris.remove(), 1500);
-        }
-      }
     </script>
   </body>
 </html>
-
