@@ -10,17 +10,17 @@
       <!-- 🎞️ Assets -->
       <a-assets>
         <video id="flux-video" autoplay="false" loop="true" muted src="Flux-Video.mp4"></video>
-        <video id="video-survpas" autoplay="false" loop="true" muted src="./ALCE5581.mp4"></video>
-        <a-asset-item id="bouton" src="./bouton-camera.obj"></a-asset-item>
-        <a-asset-item id="alar" src="./alarme.glb"></a-asset-item>
-        <a-asset-item id="survpas" src="./surveillance_camerapaspied.glb"></a-asset-item>
-        <a-asset-item id="surv" src="./surveillance_camerapied.glb"></a-asset-item>
-        <img id="salless" src="./sallessihtb.jpg" />
-        <img id="offline-img" src="./OFFLINE.jpg" />
-        <audio id="alarmsound" src="./alarme-342932.mp3" preload="auto"></audio>
+        <video id="video-survpas" autoplay="false" loop="true" muted src="ALCE5581.mp4"></video>
+        <a-asset-item id="bouton" src="bouton-camera.obj"></a-asset-item>
+        <a-asset-item id="alar" src="alarme.glb"></a-asset-item>
+        <a-asset-item id="survpas" src="surveillance_camerapaspied.glb"></a-asset-item>
+        <a-asset-item id="surv" src="surveillance_camerapied.glb"></a-asset-item>
+        <img id="salless" src="sallessihtb.jpg" />
+        <img id="offline-img" src="OFFLINE.jpg" />
+        <audio id="alarmsound" src="alarme-342932.mp3" preload="auto"></audio>
       </a-assets>
 
-      <!-- 🔴 Bouton 3D -->
+      <!-- 🔴 Bouton principal -->
       <a-obj-model
         id="videoButton"
         class="clickable"
@@ -31,7 +31,7 @@
         scale="0.03 0.03 0.03">
       </a-obj-model>
 
-      <!-- 🎬 Écran vidéo principal -->
+      <!-- 🎬 Écran principal -->
       <a-video
         id="videoScreen"
         src="#flux-video"
@@ -54,7 +54,7 @@
         visible="false">
       </a-image>
 
-      <!-- 🎬 Écran vidéo secondaire -->
+      <!-- 🎬 Écran secondaire (survpas) -->
       <a-video
         id="videoScreen2"
         src="#video-survpas"
@@ -116,7 +116,7 @@
         }
       });
 
-      // --- 🎬 Gestion de la vidéo de survpas (lecture/pause, reprise + son) ---
+      // --- 🎬 Gestion de la vidéo de survpas ---
       const survpas = document.querySelector('#survpas');
       const videoSurvpas = document.querySelector('#video-survpas');
       const videoScreen2 = document.querySelector('#videoScreen2');
@@ -124,7 +124,7 @@
 
       let wasMutedByBrowser = false;
 
-      // Si la vidéo est déjà en cours (après rechargement), on affiche l’écran
+      // Si la vidéo est déjà en lecture, garder l’écran visible
       if (!videoSurvpas.paused && videoSurvpas.currentTime > 0) {
         videoScreen2.setAttribute('visible', true);
       }
@@ -137,14 +137,13 @@
 
           if (wasMutedByBrowser) {
             videoSurvpas.muted = false;
-            console.log('🔊 Réactivation du son.');
+            console.log('🔊 Son réactivé.');
           }
 
           const playPromise = videoSurvpas.play();
-
           if (playPromise !== undefined) {
             playPromise
-              .then(() => console.log('🎥 Lecture/reprise de la vidéo.'))
+              .then(() => console.log('🎥 Vidéo surveillance en lecture.'))
               .catch(err => {
                 console.warn('🔇 Lecture bloquée, activation du mode muet :', err);
                 videoSurvpas.muted = true;
