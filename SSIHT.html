@@ -19,8 +19,18 @@
         <img id="offline-img" src="OFFLINE.jpg" />
         <audio id="alarmsound" src="alarme-342932.mp3" preload="auto"></audio>
       </a-assets>
+<a-scene>
+  <a-assets>
+    <video id="shidou" autoplay loop="true" src="ALCE5581.mp4"></video>
+  </a-assets>
 
-      <!-- 🔴 Bouton principal -->
+  <!-- Using the asset management system. -->
+  <a-video src="#shidou" width="16" height="9" position="0 0 -20"></a-video>
+
+  <!-- Defining the URL inline. Not recommended but more comfortable for web developers. -->
+  <a-video src="ALCE5581.mp4"></a-video>
+     
+  <!-- 🔴 Bouton principal -->
       <a-obj-model
         id="videoButton"
         class="clickable"
