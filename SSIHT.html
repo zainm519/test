@@ -18,7 +18,7 @@
         <a-asset-item id="surv" src="./surveillance_camerapied.glb"></a-asset-item>
 
         <img id="salless" src="./sallessihtb.jpg" />
-        <img id="offline-img" src="./OFFLINE.jpg" /> <!-- image noire -->
+        <img id="offline-img" src="./OFFLINE.jpg" /> <!-- 🆕 Image OFFLINE -->
         <audio id="alarmsound" src="./alarme-342932.mp3" preload="auto"></audio>
       </a-assets>
 
@@ -44,7 +44,7 @@
         scale="0.22282 0.22972 1">
       </a-video>
 
-      <!-- 🖼️ Image OFFLINE (superposée) -->
+      <!-- 🖼️ Image OFFLINE superposée -->
       <a-image
         id="offlineImage"
         src="#offline-img"
@@ -53,7 +53,7 @@
         position="-2.2995 -5.90513 8.79376"
         rotation="0.32945 -174.604 5.9679"
         scale="0.22282 0.22972 1"
-        material="opacity: 0"
+        opacity="0"
         visible="false">
       </a-image>
 
@@ -72,7 +72,7 @@
       <!-- 🌌 Ciel -->
       <a-sky src="#salless"></a-sky>
 
-      <!-- 🎥 Caméra du joueur -->
+      <!-- 🎥 Caméra -->
       <a-entity camera position="0 1.6 0" look-controls>
         <a-entity cursor="rayOrigin: mouse"></a-entity>
       </a-entity>
@@ -108,71 +108,54 @@
     </a-scene>
 
     <script>
-      // --- Gestion toggle OFFLINE / VIDEO ---
+      // --- 🔴 Bouton vidéo principal + image OFFLINE ---
       const video = document.querySelector('#flux-video');
       const videoButton = document.querySelector('#videoButton');
       const offlineImage = document.querySelector('#offlineImage');
 
-      // état : false = vidéo visible ; true = image OFFLINE visible
-      let isOffline = false;
-
-      function showOffline() {
-        // affiche l'image (visible + fondu) et met la vidéo en pause
-        offlineImage.setAttribute('visible', true);
-        // animation en string pour compatibilité
-        offlineImage.setAttribute('animation__fadein', 'property: material.opacity; from: 0; to: 1; dur: 400; easing: easeInOutQuad');
-        // pause vidéo
-        try {
-          video.pause();
-        } catch (e) {
-          console.warn('Pause vidéo échouée :', e);
-        }
-        // bouton rouge sans pulsation
-        videoButton.setAttribute('material', 'color: #ff0000');
-        videoButton.removeAttribute('animation__pulse');
-      }
-
-      function hideOffline() {
-        // fondu sortant puis hide
-        offlineImage.setAttribute('animation__fadeout', 'property: material.opacity; from: 1; to: 0; dur: 400; easing: easeInOutQuad');
-        // masquer après la durée du fondu
-        setTimeout(() => offlineImage.setAttribute('visible', false), 420);
-
-        // relance la vidéo (avec gestion promise pour autoplay bloqué)
-        const playPromise = video.play();
-        if (playPromise !== undefined) {
-          playPromise.then(() => {
-            // succès
-          }).catch(err => {
-            // tentative de forcer la lecture en muet si bloqué
-            console.warn('Lecture auto bloquée, tentative forcée :', err);
-            video.muted = true;
-            video.play().catch(() => {});
-          });
-        }
-
-        // bouton vert + pulsation
-        videoButton.setAttribute('material', 'color: green');
-        videoButton.setAttribute('animation__pulse', 'property: scale; to: 0.035 0.035 0.035; dir: alternate; dur: 600; loop: true; easing: easeInOutSine');
-      }
-
-      // clic toggle
       videoButton.addEventListener('click', () => {
-        isOffline = !isOffline;
-        if (isOffline) {
-          showOffline();
+        const isOfflineVisible = offlineImage.getAttribute('visible');
+
+        if (!isOfflineVisible) {
+          // Passe en mode OFFLINE
+          offlineImage.setAttribute('visible', true);
+          offlineImage.setAttribute('animation__fadein', {
+            property: 'material.opacity',
+            from: 0,
+            to: 1,
+            dur: 800,
+            easing: 'easeInOutQuad'
+          });
+          video.pause();
+          videoButton.setAttribute('material', 'color: #ff0000');
+          videoButton.removeAttribute('animation__pulse');
         } else {
-          hideOffline();
+          // Reprend la vidéo
+          offlineImage.setAttribute('animation__fadeout', {
+            property: 'material.opacity',
+            from: 1,
+            to: 0,
+            dur: 800,
+            easing: 'easeInOutQuad'
+          });
+          setTimeout(() => offlineImage.setAttribute('visible', false), 800);
+
+          video.play();
+          videoButton.setAttribute('material', 'color: green');
+          videoButton.setAttribute(
+            'animation__pulse',
+            'property: scale; to: 0.035 0.035 0.035; dir: alternate; dur: 600; loop: true; easing: easeInOutSine'
+          );
         }
       });
 
-      // --- Vidéo secondaire (survpas) ---
+      // --- 🎬 Vidéo de survpas ---
       const survpas = document.querySelector('#survpas');
       const videoSurvpas = document.querySelector('#video-survpas');
       const videoScreen2 = document.querySelector('#videoScreen2');
-      if (videoSurvpas) videoSurvpas.load();
+      videoSurvpas.load();
 
-      survpas?.addEventListener('click', () => {
+      survpas.addEventListener('click', () => {
         const isVisible = videoScreen2.getAttribute('visible');
         if (!isVisible) {
           videoScreen2.setAttribute('visible', true);
@@ -181,7 +164,7 @@
             playPromise.catch(err => {
               console.warn('Lecture auto bloquée, tentative forcée :', err);
               videoSurvpas.muted = true;
-              videoSurvpas.play().catch(() => {});
+              videoSurvpas.play();
             });
           }
         } else {
@@ -190,11 +173,12 @@
         }
       });
 
-      // --- Alarme (inchangé) ---
+      // --- 🔔 Alarme + explosion ---
       const alarm = document.querySelector('#alarme');
       const ACTIVE_TINT = 0xff7700;
       alarm._originalMaterials = null;
-      alarm?.addEventListener('model-loaded', () => saveOriginalMaterials());
+
+      alarm.addEventListener('model-loaded', () => saveOriginalMaterials());
 
       function saveOriginalMaterials() {
         const root = alarm.getObject3D('mesh');
@@ -251,11 +235,13 @@
         });
       }
 
-      alarm?.addEventListener('click', () => {
+      alarm.addEventListener('click', () => {
         if (alarm.classList.contains('triggered')) return;
         alarm.classList.add('triggered');
+
         if (!alarm._originalMaterials) saveOriginalMaterials();
         tintAlarm(ACTIVE_TINT);
+
         if (alarm.components && alarm.components.sound) {
           alarm.components.sound.playSound();
         }
@@ -308,7 +294,10 @@
           const vx = Math.cos(angle) * speed;
           const vz = Math.sin(angle) * speed;
           const vy = Math.random() * 10;
-          debris.setAttribute('animation__move', `property: position; to: ${pos.x + vx} ${pos.y + 5 + vy} ${pos.z + vz}; dur: 1000`);
+          const targetX = pos.x + vx;
+          const targetY = pos.y + 5 + vy;
+          const targetZ = pos.z + vz;
+          debris.setAttribute('animation__move', `property: position; to: ${targetX} ${targetY} ${targetZ}; dur: 1000`);
           debris.setAttribute('animation__fade', 'property: material.opacity; to: 0; dur: 800; delay: 300');
           scene.appendChild(debris);
           setTimeout(() => debris.remove(), 1500);
