@@ -16,7 +16,7 @@
         <a-asset-item id="survpas" src="./surveillance_camerapaspied.glb"></a-asset-item>
         <a-asset-item id="surv" src="./surveillance_camerapied.glb"></a-asset-item>
         <img id="salless" src="./sallessihtb.jpg" />
-        <img id="offline-img" src="./OFFLINE.jpg" /> <!-- 🆕 Ajout -->
+        <img id="offline-img" src="./OFFLINE.jpg" /> <!-- 🆕 Image noire -->
         <audio id="alarmsound" src="./alarme-342932.mp3" preload="auto"></audio>
       </a-assets>
 
@@ -42,7 +42,7 @@
         scale="0.22282 0.22972 1">
       </a-video>
 
-      <!-- 🖼️ Image OFFLINE (superposée mais cachée au départ) -->
+      <!-- 🖼️ Image OFFLINE superposée -->
       <a-image
         id="offlineImage"
         src="#offline-img"
@@ -54,6 +54,18 @@
         visible="false">
       </a-image>
 
+      <!-- 🎬 Deuxième écran vidéo -->
+      <a-video
+        id="videoScreen2"
+        src="#video-survpas"
+        width="16"
+        height="9"
+        position="1.5 -5.90513 8.79376"
+        rotation="0.32945 -174.604 5.9679"
+        scale="0.22282 0.22972 1"
+        visible="false">
+      </a-video>
+
       <!-- 🌌 Ciel -->
       <a-sky src="#salless"></a-sky>
 
@@ -62,33 +74,40 @@
         <a-entity cursor="rayOrigin: mouse"></a-entity>
       </a-entity>
 
-      <!-- 🎥 Caméras et alarme (inchangées) -->
-      <a-entity id="surv" gltf-model="#surv" position="-31.71937 19.99428 49.34695" scale="15 15 15" rotation="-17.79 -33.49 11.10"></a-entity>
-      <a-entity id="survpas" gltf-model="#survpas" position="-4.74865 3.94615 7.22221" scale="2.5 2.5 2.5" rotation="17.39 147.23 -1.12"
-        animation="property: rotation; dir: alternate; dur: 2000; easing: easeInOutSine; to: 17.39 167.23 -1.12; loop: true"></a-entity>
+      <!-- 🎥 Caméras -->
+      <a-entity id="surv" gltf-model="#surv" position="-31.71937 19.99428 49.34695"
+        scale="15 15 15" rotation="-17.79 -33.49 11.10"></a-entity>
 
-      <a-entity id="alarme" gltf-model="#alar" position="-13.79992 -30.02283 22.72893" scale="13 13 13" rotation="0 120 0"
+      <a-entity id="survpas" gltf-model="#survpas"
+        position="-4.74865 3.94615 7.22221" scale="2.5 2.5 2.5"
+        rotation="17.39 147.23 -1.12"
+        animation="property: rotation; dir: alternate; dur: 2000; easing: easeInOutSine;
+        to: 17.39 167.23 -1.12; loop: true"></a-entity>
+
+      <!-- 🔔 Alarme -->
+      <a-entity id="alarme" gltf-model="#alar"
+        position="-13.79992 -30.02283 22.72893"
+        scale="13 13 13" rotation="0 120 0"
         class="clickable" sound="src: #alarmsound; autoplay: false; volume: 2"></a-entity>
     </a-scene>
 
     <script>
-      // --- 🔴 Bouton vidéo + OFFLINE ---
+      // --- 🔴 Gestion du bouton principal (OFFLINE + vidéo) ---
       const video = document.querySelector('#flux-video');
       const videoButton = document.querySelector('#videoButton');
       const offlineImage = document.querySelector('#offlineImage');
-      const videoScreen = document.querySelector('#videoScreen');
+
+      let isOffline = false; // État actuel
 
       videoButton.addEventListener('click', () => {
-        const isOffline = offlineImage.getAttribute('visible');
+        isOffline = !isOffline; // Bascule entre ON/OFFLINE
 
-        if (!isOffline) {
-          // Met en OFFLINE
+        if (isOffline) {
           offlineImage.setAttribute('visible', true);
           video.pause();
           videoButton.setAttribute('material', 'color: #ff0000');
           videoButton.removeAttribute('animation__pulse');
         } else {
-          // Reprend la vidéo
           offlineImage.setAttribute('visible', false);
           video.play();
           videoButton.setAttribute('material', 'color: green');
@@ -97,6 +116,123 @@
             'property: scale; to: 0.035 0.035 0.035; dir: alternate; dur: 600; loop: true; easing: easeInOutSine'
           );
         }
+      });
+
+      // --- 🎬 Gestion de la vidéo de survpas ---
+      const survpas = document.querySelector('#survpas');
+      const videoSurvpas = document.querySelector('#video-survpas');
+      const videoScreen2 = document.querySelector('#videoScreen2');
+      videoSurvpas.load();
+
+      survpas.addEventListener('click', () => {
+        const isVisible = videoScreen2.getAttribute('visible');
+        if (!isVisible) {
+          videoScreen2.setAttribute('visible', true);
+          const playPromise = videoSurvpas.play();
+          if (playPromise !== undefined) {
+            playPromise.catch(err => {
+              console.warn('Lecture automatique bloquée, tentative forcée :', err);
+              videoSurvpas.muted = true;
+              videoSurvpas.play();
+            });
+          }
+        } else {
+          videoSurvpas.pause();
+          videoScreen2.setAttribute('visible', false);
+        }
+      });
+
+      // --- 🔔 Gestion de l’alarme ---
+      const alarm = document.querySelector('#alarme');
+      const ACTIVE_TINT = 0xff7700;
+      alarm._originalMaterials = null;
+
+      alarm.addEventListener('model-loaded', () => saveOriginalMaterials());
+
+      function saveOriginalMaterials() {
+        const root = alarm.getObject3D('mesh');
+        if (!root) return;
+        const originals = [];
+        root.traverse(node => {
+          if (node.isMesh) {
+            const mat = node.material;
+            if (Array.isArray(mat)) {
+              originals.push({ uuid: node.uuid, material: mat.map(m => m.clone()) });
+            } else {
+              originals.push({ uuid: node.uuid, material: mat.clone() });
+            }
+          }
+        });
+        alarm._originalMaterials = originals;
+      }
+
+      function tintAlarm(color) {
+        const root = alarm.getObject3D('mesh');
+        if (!root) return;
+        root.traverse(node => {
+          if (node.isMesh) {
+            const mats = node.material;
+            if (Array.isArray(mats)) {
+              mats.forEach(m => {
+                if (m.color) m.color.set(color);
+                if (m.emissive) m.emissive.set(color);
+              });
+            } else {
+              if (mats.color) mats.color.set(color);
+              if (mats.emissive) mats.emissive.set(color);
+            }
+            node.material.needsUpdate = true;
+          }
+        });
+      }
+
+      function restoreOriginalMaterials() {
+        const root = alarm.getObject3D('mesh');
+        if (!root || !alarm._originalMaterials) return;
+        root.traverse(node => {
+          if (node.isMesh) {
+            const orig = alarm._originalMaterials.find(o => o.uuid === node.uuid);
+            if (orig) {
+              if (Array.isArray(orig.material)) {
+                node.material = orig.material.map(m => m.clone());
+              } else {
+                node.material = orig.material.clone();
+              }
+              node.material.needsUpdate = true;
+            }
+          }
+        });
+      }
+
+      alarm.addEventListener('click', () => {
+        if (alarm.classList.contains('triggered')) return;
+        alarm.classList.add('triggered');
+
+        if (!alarm._originalMaterials) saveOriginalMaterials();
+        tintAlarm(ACTIVE_TINT);
+
+        if (alarm.components && alarm.components.sound) {
+          alarm.components.sound.playSound();
+        }
+
+        const flameLight = document.createElement('a-entity');
+        flameLight.setAttribute('light', 'type: point; intensity: 2.0; color: orange; distance: 10; decay: 2');
+        flameLight.setAttribute('position', '0 3 0');
+        alarm.appendChild(flameLight);
+
+        const flame = document.createElement('a-sphere');
+        flame.setAttribute('position', '0 3 0');
+        flame.setAttribute('radius', '1.5');
+        flame.setAttribute('material', 'color: orange; emissive: red; opacity: 0.6; transparent: true');
+        flame.setAttribute('animation', 'property: scale; to: 1.3 1.5 1.3; dir: alternate; dur: 200; loop: true');
+        alarm.appendChild(flame);
+
+        setTimeout(() => {
+          flame.remove();
+          flameLight.remove();
+          restoreOriginalMaterials();
+          alarm.classList.remove('triggered');
+        }, 3000);
       });
     </script>
   </body>
