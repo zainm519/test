@@ -118,13 +118,7 @@
         } else {
           offlineImage.setAttribute('visible', false);
           video.play();
-          videoButton.setAttribute('material', 'color: green');
-          videoButton.setAttribute(
-            'animation__pulse',
-            'property: scale; to: 0.035 0.035 0.035; dir: alternate; dur: 600; loop: true; easing: easeInOutSine'
-          );
-        }
-      });
+          videoButton.setAttribute('material', 'color: #ff0000');
 
       // --- 💗 Bouton rose : lecture / pause vidéo ALCE5581 avec son ---
       const boutonRose = document.querySelector('#boutonRose');
