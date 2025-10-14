@@ -1,280 +1,275 @@
 <!DOCTYPE html>
 <html lang="fr">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Salle SSIHT</title>
-    <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
-  </head>
-  <body>
-    <a-scene>
-      <!-- 🎞️ Assets -->
-      <a-assets>
-        <video id="flux-video" autoplay="false" loop="true" muted src="Flux-Video.mp4"></video>
-        <video id="video-survpas" autoplay="false" loop="true" src="ALCE5581.mp4"></video>
-        <a-asset-item id="bouton" src="bouton-camera.obj"></a-asset-item>
-        <a-asset-item id="butin" src="bout.obj"></a-asset-item>
-        <a-asset-item id="alar" src="alarme.glb"></a-asset-item>
-        <a-asset-item id="survpas" src="surveillance_camerapaspied.glb"></a-asset-item>
-        <a-asset-item id="surv" src="surveillance_camerapied.glb"></a-asset-item>
-        <img id="salless" src="sallessihtb.jpg" />
-        <img id="offline-img" src="OFFLINE.jpg" />
-        <audio id="alarmsound" src="alarme-342932.mp3" preload="auto"></audio>
-        <video id="shidou" class="clickable" autoplay loop="true" src="ALCE5581.mp4"></video>
-      </a-assets>
+<head>
+  <meta charset="UTF-8" />
+  <title>Salle SSIHT</title>
+  <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
+</head>
+<body>
+  <a-scene>
+    <!-- 🎞️ Assets -->
+    <a-assets>
+      <video id="flux-video" autoplay="false" loop="true" muted src="Flux-Video.mp4"></video>
+      <video id="video-survpas" autoplay="false" loop="true" src="ALCE5581.mp4"></video>
+      <a-asset-item id="bouton" src="bouton-camera.obj"></a-asset-item>
+      <a-asset-item id="butin" src="bout.obj"></a-asset-item>
+      <a-asset-item id="alar" src="alarme.glb"></a-asset-item>
+      <a-asset-item id="survpas" src="surveillance_camerapaspied.glb"></a-asset-item>
+      <a-asset-item id="surv" src="surveillance_camerapied.glb"></a-asset-item>
+      <img id="salless" src="sallessihtb.jpg" />
+      <img id="offline-img" src="OFFLINE.jpg" />
+      <audio id="alarmsound" src="alarme-342932.mp3" preload="auto"></audio>
+      <video id="shidou" class="clickable" autoplay loop="true" src="ALCE5581.mp4"></video>
+    </a-assets>
 
-      <!-- 🔴 Bouton principal -->
-      <a-obj-model 
-        id="videoButton" 
-        class="clickable"
-        src="#butin" 
-        position="-12.71124 -19.40063 19.98393" 
-        material="color: #ff0000"
-        rotation="-90.87416 175.99985 175.99985"
-        scale="0.03495522870314175 0.03495522870314175 0.03495522870314175">
-      </a-obj-model>
-      
-      <!-- 💗 Bouton rose (ALCE5581) -->
-      <a-obj-model 
-        id="boutonRose"
-        class="clickable"
-        src="#bouton"
-        position="-19.42891 -19.40063 24.85667"
-        material="color: #ff80c0"
-        rotation="-89.87416 179.99985 179.99985"
-        scale="0.03 0.03 0.03">
-      </a-obj-model>
-      
-      <!-- 🎬 Écran principal -->
-      <a-video
-        id="videoScreen"
-        src="#flux-video"
-        width="16"
-        height="9"
-        position="-2.2995 -5.90513 8.79376"
-        rotation="0.32945 -174.604 5.9679"
-        scale="0.22282 0.22972 1">
-      </a-video>
+    <!-- 🔴 Bouton principal -->
+    <a-obj-model 
+      id="videoButton"
+      class="clickable"
+      src="#butin"
+      position="-12.711 -19.400 19.983"
+      material="color: #ff0000"
+      rotation="-90.874 175.999 175.999"
+      scale="0.035 0.035 0.035">
+    </a-obj-model>
 
-      <!-- 🖼️ Image OFFLINE -->
-      <a-image
-        id="offlineImage"
-        src="#offline-img"
-        width="16"
-        height="9"
-        position="-2.2995 -5.90513 8.79376"
-        rotation="0.32945 -174.604 5.9679"
-        scale="0.22282 0.22972 1"
-        visible="false">
-      </a-image>
+    <!-- 💗 Bouton rose (ALCE5581) -->
+    <a-obj-model 
+      id="boutonRose"
+      class="clickable"
+      src="#bouton"
+      position="-19.428 -19.400 24.856"
+      material="color: #ff80c0"
+      rotation="-89.874 179.999 179.999"
+      scale="0.03 0.03 0.03">
+    </a-obj-model>
 
-      <!-- 🎬 Écran secondaire -->
-      <a-video 
-        id="videoScreen2" 
-        src="#video-survpas"
-        width="16"
-        height="9"
-        position="-12.24911 -5.5989 11.86178"
-        rotation="5.098751418869196 179.95114654791817 1.7039764827190682"
-        scale="0.2225 0.22086 1">
-      </a-video>
+    <!-- 🎬 Écran principal -->
+    <a-video
+      id="videoScreen"
+      src="#flux-video"
+      width="16"
+      height="9"
+      position="-2.299 -5.905 8.793"
+      rotation="0.329 -174.604 5.967"
+      scale="0.223 0.230 1">
+    </a-video>
 
-      <!-- 🌌 Ciel -->
-      <a-sky src="#salless"></a-sky>
+    <!-- 🖼️ Image OFFLINE -->
+    <a-image
+      id="offlineImage"
+      src="#offline-img"
+      width="16"
+      height="9"
+      position="-2.299 -5.905 8.793"
+      rotation="0.329 -174.604 5.967"
+      scale="0.223 0.230 1"
+      visible="false">
+    </a-image>
 
-      <!-- 🎥 Caméra joueur -->
-      <a-entity camera position="0 1.6 0" look-controls>
-        <a-entity cursor="rayOrigin: mouse"></a-entity>
-      </a-entity>
+    <!-- 🎬 Écran secondaire -->
+    <a-video
+      id="videoScreen2"
+      src="#video-survpas"
+      width="16"
+      height="9"
+      position="-12.249 -5.598 11.861"
+      rotation="5.099 179.951 1.704"
+      scale="0.223 0.221 1">
+    </a-video>
 
-      <!-- 🎥 Caméras de surveillance -->
-      <a-entity 
-        id="surv" 
-        gltf-model="#surv" 
-        position="-31.71937 19.99428 49.34695"
-        scale="15 15 15" 
-        rotation="-17.79 -33.49 11.10"
-        animation="property: rotation; dir: alternate; dur: 2500; easing: easeInOutSine; to: -17.79 -53.49 11.10; loop: true">
-      </a-entity>
+    <!-- 🌌 Ciel -->
+    <a-sky src="#salless"></a-sky>
 
-      <a-entity 
-        id="survpas" 
-        gltf-model="#survpas"
-        position="-4.74865 3.94615 7.22221" 
-        scale="2.5 2.5 2.5"
-        rotation="17.39 147.23 -1.12"
-        animation="property: rotation; dir: alternate; dur: 2000; easing: easeInOutSine; to: 17.39 167.23 -1.12; loop: true">
-      </a-entity>
+    <!-- 🎥 Caméra joueur -->
+    <a-entity camera position="0 1.6 0" look-controls>
+      <a-entity cursor="rayOrigin: mouse"></a-entity>
+    </a-entity>
 
-      <!-- 🔔 Alarme -->
-      <a-entity 
-        id="alarme" 
-        gltf-model="#alar"
-        position="-13.79992 -30.02283 22.72893"
-        scale="13 13 13" 
-        rotation="0 120 0"
-        class="clickable" 
-        sound="src: #alarmsound; autoplay: false; volume: 2">
-      </a-entity>
-    </a-scene>
+    <!-- 🎥 Caméras de surveillance -->
+    <a-entity
+      id="surv"
+      gltf-model="#surv"
+      position="-31.719 19.994 49.346"
+      scale="15 15 15"
+      rotation="-17.79 -33.49 11.10"
+      animation="property: rotation; dir: alternate; dur: 2500; easing: easeInOutSine; to: -17.79 -53.49 11.10; loop: true">
+    </a-entity>
 
-    <script>
-      const video = document.querySelector('#flux-video');
-      const videoButton = document.querySelector('#videoButton');
-      const offlineImage = document.querySelector('#offlineImage');
-      let isOffline = false;
+    <a-entity
+      id="survpas"
+      gltf-model="#survpas"
+      position="-4.748 3.946 7.222"
+      scale="2.5 2.5 2.5"
+      rotation="17.39 147.23 -1.12"
+      animation="property: rotation; dir: alternate; dur: 2000; easing: easeInOutSine; to: 17.39 167.23 -1.12; loop: true">
+    </a-entity>
 
-      videoButton.addEventListener('click', () => {
-        isOffline = !isOffline;
+    <!-- 🔔 Alarme -->
+    <a-entity
+      id="alarme"
+      gltf-model="#alar"
+      position="-13.799 -30.022 22.728"
+      scale="13 13 13"
+      rotation="0 120 0"
+      class="clickable"
+      sound="src: #alarmsound; autoplay: false; volume: 2">
+    </a-entity>
+  </a-scene>
 
-        const surv = document.querySelector('#surv');
-        const survpas = document.querySelector('#survpas');
+  <script>
+    const video = document.querySelector('#flux-video');
+    const videoButton = document.querySelector('#videoButton');
+    const offlineImage = document.querySelector('#offlineImage');
+    const surv = document.querySelector('#surv');
+    const survpas = document.querySelector('#survpas');
+    let isOffline = false;
 
-        if (isOffline) {
-          // 📴 Mode OFFLINE
-          offlineImage.setAttribute('visible', true);
-          video.pause();
-          videoButton.setAttribute('material', 'color: #ff0000');
-          videoButton.removeAttribute('animation__pulse');
+    // Stock des animations originales pour relancer
+    const survAnimation = 'property: rotation; dir: alternate; dur: 2500; easing: easeInOutSine; to: -17.79 -53.49 11.10; loop: true';
+    const survpasAnimation = 'property: rotation; dir: alternate; dur: 2000; easing: easeInOutSine; to: 17.39 167.23 -1.12; loop: true';
 
-          // 🧯 Stopper les caméras
-          stopAnimation(surv);
-          stopAnimation(survpas);
-        } else {
-          // 📺 Mode ONLINE
-          offlineImage.setAttribute('visible', false);
-          video.play();
-          videoButton.setAttribute('material', 'color: green');
-          videoButton.setAttribute(
-            'animation__pulse',
-            'property: scale; to: 0.035 0.035 0.035; dir: alternate; dur: 600; loop: true; easing: easeInOutSine'
-          );
+    videoButton.addEventListener('click', () => {
+      isOffline = !isOffline;
 
-          // 🔁 Relancer les animations des caméras
-          surv.setAttribute(
-            'animation',
-            'property: rotation; dir: alternate; dur: 2500; easing: easeInOutSine; to: -17.79 -53.49 11.10; loop: true'
-          );
-          survpas.setAttribute(
-            'animation',
-            'property: rotation; dir: alternate; dur: 2000; easing: easeInOutSine; to: 17.39 167.23 -1.12; loop: true'
-          );
+      if (isOffline) {
+        // OFFLINE
+        offlineImage.setAttribute('visible', true);
+        video.pause();
+        videoButton.setAttribute('material', 'color: #ff0000');
+        videoButton.removeAttribute('animation__pulse');
+
+        // Stopper et clignotement rouge sur caméras
+        stopAnimation(surv, true);
+        stopAnimation(survpas, true);
+
+      } else {
+        // ONLINE
+        offlineImage.setAttribute('visible', false);
+        video.play();
+        videoButton.setAttribute('material', 'color: green');
+        videoButton.setAttribute(
+          'animation__pulse',
+          'property: scale; to: 0.035 0.035 0.035; dir: alternate; dur: 600; loop: true; easing: easeInOutSine'
+        );
+
+        // Relancer animations et restaurer couleur
+        startAnimation(surv, survAnimation);
+        startAnimation(survpas, survpasAnimation);
+      }
+    });
+
+    function stopAnimation(el, offlineColor=false) {
+      if (!el) return;
+      const rot = el.getAttribute('rotation');
+      el.removeAttribute('animation');
+      el.setAttribute('rotation', `${rot.x} ${rot.y} ${rot.z}`);
+
+      if (offlineColor) {
+        el.setAttribute('animation__color', 'property: material.color; from: #ffffff; to: #ff0000; dir: alternate; dur: 500; loop: true');
+      }
+    }
+
+    function startAnimation(el, animationString) {
+      if (!el) return;
+      el.removeAttribute('animation__color');
+      el.setAttribute('animation', animationString);
+    }
+
+    // --- 💗 Bouton rose : lecture / pause vidéo ALCE5581 ---
+    const boutonRose = document.querySelector('#boutonRose');
+    const videoALCE = document.querySelector('#video-survpas');
+    const videoScreenALCE = document.querySelector('#videoScreen2');
+    let wasMutedByBrowser = false;
+
+    boutonRose.addEventListener('click', () => {
+      if (videoALCE.paused) {
+        videoScreenALCE.setAttribute('visible', true);
+        boutonRose.setAttribute('material', 'color: #00ff80');
+        videoALCE.muted = false;
+        const playPromise = videoALCE.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(err => {
+            console.warn('🔇 Lecture bloquée, activation du mode muet :', err);
+            videoALCE.muted = true;
+            wasMutedByBrowser = true;
+            videoALCE.play();
+          });
+        }
+      } else {
+        videoALCE.pause();
+        videoScreenALCE.setAttribute('visible', false);
+        boutonRose.setAttribute('material', 'color: #ff80c0');
+        boutonRose.removeAttribute('animation__pulse');
+        videoALCE.muted = true;
+      }
+    });
+
+    // --- 🔔 Gestion de l’alarme ---
+    const alarm = document.querySelector('#alarme');
+    const ACTIVE_TINT = 0xff7700;
+    alarm._originalMaterials = null;
+
+    alarm.addEventListener('model-loaded', () => saveOriginalMaterials());
+
+    function saveOriginalMaterials() {
+      const root = alarm.getObject3D('mesh');
+      if (!root) return;
+      const originals = [];
+      root.traverse(node => {
+        if (node.isMesh) {
+          const mat = node.material;
+          if (Array.isArray(mat)) {
+            originals.push({ uuid: node.uuid, material: mat.map(m => m.clone()) });
+          } else {
+            originals.push({ uuid: node.uuid, material: mat.clone() });
+          }
         }
       });
+      alarm._originalMaterials = originals;
+    }
 
-      // Fonction pour stopper l’animation et fixer la rotation actuelle
-      function stopAnimation(el) {
-        if (!el) return;
-        const rot = el.getAttribute('rotation');
-        el.removeAttribute('animation');
-        el.setAttribute('rotation', `${rot.x} ${rot.y} ${rot.z}`);
-      }
-
-      // --- 💗 Bouton rose : lecture / pause vidéo ALCE5581 avec son ---
-      const boutonRose = document.querySelector('#boutonRose');
-      const videoALCE = document.querySelector('#video-survpas');
-      const videoScreenALCE = document.querySelector('#videoScreen2');
-      let wasMutedByBrowser = false;
-
-      boutonRose.addEventListener('click', () => {
-        if (videoALCE.paused) {
-          videoScreenALCE.setAttribute('visible', true);
-          boutonRose.setAttribute('material', 'color: #00ff80');
-          videoALCE.muted = false;
-          const playPromise = videoALCE.play();
-          if (playPromise !== undefined) {
-            playPromise.catch(err => {
-              console.warn('🔇 Lecture bloquée, activation du mode muet :', err);
-              videoALCE.muted = true;
-              wasMutedByBrowser = true;
-              videoALCE.play();
-            });
-          }
-        } else {
-          videoALCE.pause();
-          videoScreenALCE.setAttribute('visible', false);
-          boutonRose.setAttribute('material', 'color: #ff80c0');
-          boutonRose.removeAttribute('animation__pulse');
-          videoALCE.muted = true;
+    function tintAlarm(color) {
+      const root = alarm.getObject3D('mesh');
+      if (!root) return;
+      root.traverse(node => {
+        if (node.isMesh) {
+          const mats = Array.isArray(node.material) ? node.material : [node.material];
+          mats.forEach(m => {
+            if (m.color) m.color.set(color);
+            if (m.emissive) m.emissive.set(color);
+          });
         }
       });
+    }
 
-      // --- 🔔 Gestion de l’alarme ---
-      const alarm = document.querySelector('#alarme');
-      const ACTIVE_TINT = 0xff7700;
-      alarm._originalMaterials = null;
-
-      alarm.addEventListener('model-loaded', () => saveOriginalMaterials());
-
-      function saveOriginalMaterials() {
-        const root = alarm.getObject3D('mesh');
-        if (!root) return;
-        const originals = [];
-        root.traverse(node => {
-          if (node.isMesh) {
-            const mat = node.material;
-            if (Array.isArray(mat)) {
-              originals.push({ uuid: node.uuid, material: mat.map(m => m.clone()) });
-            } else {
-              originals.push({ uuid: node.uuid, material: mat.clone() });
-            }
-          }
-        });
-        alarm._originalMaterials = originals;
-      }
-
-      function tintAlarm(color) {
-        const root = alarm.getObject3D('mesh');
-        if (!root) return;
-        root.traverse(node => {
-          if (node.isMesh) {
-            const mats = Array.isArray(node.material) ? node.material : [node.material];
-            mats.forEach(m => {
-              if (m.color) m.color.set(color);
-              if (m.emissive) m.emissive.set(color);
-            });
-          }
-        });
-      }
-
-      function restoreOriginalMaterials() {
-        const root = alarm.getObject3D('mesh');
-        if (!root || !alarm._originalMaterials) return;
-        root.traverse(node => {
-          if (node.isMesh) {
-            const orig = alarm._originalMaterials.find(o => o.uuid === node.uuid);
-            if (orig) node.material = orig.material;
-          }
-        });
-      }
-
-      alarm.addEventListener('click', () => {
-        if (alarm.classList.contains('triggered')) return;
-        alarm.classList.add('triggered');
-
-        if (!alarm._originalMaterials) saveOriginalMaterials();
-        tintAlarm(ACTIVE_TINT);
-
-        if (alarm.components && alarm.components.sound) alarm.components.sound.playSound();
-
-        const flameLight = document.createElement('a-entity');
-        flameLight.setAttribute('light', 'type: point; intensity: 2.0; color: orange; distance: 10; decay: 2');
-        flameLight.setAttribute('position', '0 3 0');
-        alarm.appendChild(flameLight);
-
-        const flame = document.createElement('a-sphere');
-        flame.setAttribute('position', '0 3 0');
-        flame.setAttribute('radius', '1.5');
-        flame.setAttribute('material', 'color: orange; emissive: red; opacity: 0.6; transparent: true');
-        flame.setAttribute('animation', 'property: scale; to: 1.3 1.5 1.3; dir: alternate; dur: 200; loop: true');
-        alarm.appendChild(flame);
-
-        setTimeout(() => {
-          flame.remove();
-          flameLight.remove();
-          restoreOriginalMaterials();
-          alarm.classList.remove('triggered');
-        }, 3000);
+    function restoreOriginalMaterials() {
+      const root = alarm.getObject3D('mesh');
+      if (!root || !alarm._originalMaterials) return;
+      root.traverse(node => {
+        if (node.isMesh) {
+          const orig = alarm._originalMaterials.find(o => o.uuid === node.uuid);
+          if (orig) node.material = orig.material;
+        }
       });
-    </script>
-  </body>
-</html>
+    }
+
+    alarm.addEventListener('click', () => {
+      if (alarm.classList.contains('triggered')) return;
+      alarm.classList.add('triggered');
+
+      if (!alarm._originalMaterials) saveOriginalMaterials();
+      tintAlarm(ACTIVE_TINT);
+
+      if (alarm.components && alarm.components.sound) alarm.components.sound.playSound();
+
+      const flameLight = document.createElement('a-entity');
+      flameLight.setAttribute('light', 'type: point; intensity: 2.0; color: orange; distance: 10; decay: 2');
+      flameLight.setAttribute('position', '0 3 0');
+      alarm.appendChild(flameLight);
+
+      const flame = document.createElement('a-sphere');
+      flame.setAttribute('position', '0 3 0');
+      flame.setAttribute('radius', '1.5');
+      flame.setAttribute('material', 'color: orange; emissive: red; opacity: 0.6; transparent: true');
+      flame.setAttribute
