@@ -131,30 +131,101 @@
         sound="src: #alarmsound; autoplay: false; volume: 2">
       </a-entity>
 
-      <!-- ✳️ Effet Matrix (initialement masqué) -->
-      <a-entity id="matrixEffect" visible="false">
-        <!-- Fond noir -->
-        <a-plane 
-          position="0 1.6 -3" 
-          width="100" 
-          height="100"
-          color="black"
-          material="opacity: 1; side: double">
-        </a-plane>
+      <!-- ✳️ Effet Matrix amélioré -->
+<a-entity id="matrixEffect" visible="false">
+  <a-plane 
+    position="0 1.6 -3" 
+    width="100" 
+    height="100"
+    color="black"
+    material="opacity: 1; side: double">
+  </a-plane>
 
-        <!-- Mur de chiffres verts -->
-        <a-plane
-          id="matrixText"
-          position="0 1.6 -2.9"
-          width="100"
-          height="100"
-          color="black"
-          material="shader: flat; transparent: true">
-        </a-plane>
-      </a-entity>
-    </a-scene>
+  <a-plane
+    id="matrixText"
+    position="0 1.6 -2.9"
+    width="100"
+    height="100"
+    color="black"
+    material="shader: flat; transparent: true">
+  </a-plane>
+</a-entity>
 
-    <script>
+<script>
+const keyEntity = document.querySelector('#keyEntity');
+const sky = document.querySelector('a-sky');
+const matrixEffect = document.querySelector('#matrixEffect');
+const matrixPlane = document.querySelector('#matrixText');
+let matrixActive = false;
+let matrixInterval = null;
+
+keyEntity.addEventListener('click', () => {
+  matrixActive = !matrixActive;
+  if (matrixActive) {
+    sky.setAttribute('visible', 'false');
+    matrixEffect.setAttribute('visible', 'true');
+    startMatrixEffect(matrixPlane);
+  } else {
+    sky.setAttribute('visible', 'true');
+    matrixEffect.setAttribute('visible', 'false');
+    stopMatrixEffect();
+  }
+});
+
+function startMatrixEffect(plane) {
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width = 512;
+  const h = canvas.height = 512;
+
+  const cols = Math.floor(w / 15);
+  const ypos = Array(cols).fill(0);
+  const speeds = Array.from({length: cols}, () => 5 + Math.random() * 15);
+
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+
+  function applyTexture() {
+    const mesh = plane.getObject3D('mesh');
+    if (!mesh) {
+      setTimeout(applyTexture, 100);
+      return;
+    }
+    mesh.material.map = texture;
+    mesh.material.needsUpdate = true;
+  }
+  applyTexture();
+
+  matrixInterval = setInterval(() => {
+    // Fond noir avec opacité pour effet de traînée
+    ctx.fillStyle = 'rgba(0,0,0,0.1)';
+    ctx.fillRect(0, 0, w, h);
+
+    for (let i = 0; i < cols; i++) {
+      ctx.fillStyle = '#0F0';
+      ctx.font = `${10 + Math.random() * 5}pt monospace`;
+
+      const char = Math.random() > 0.5 ? '1' : '0';
+      const x = i * 15;
+      ctx.fillText(char, x, ypos[i]);
+
+      // tête de colonne plus claire
+      ctx.fillStyle = '#AAF';
+      ctx.fillText(char, x, ypos[i]);
+
+      ypos[i] += speeds[i];
+      if (ypos[i] > h + Math.random() * 1000) ypos[i] = 0;
+    }
+
+    texture.needsUpdate = true;
+  }, 50);
+}
+
+function stopMatrixEffect() {
+  clearInterval(matrixInterval);
+  matrixInterval = null;
+}
+</script>
       // ----------------------------- Mode ONLINE/OFFLINE -----------------------------
       const video = document.querySelector('#flux-video');
       const videoButton = document.querySelector('#videoButton');
