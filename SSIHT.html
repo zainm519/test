@@ -65,23 +65,24 @@
         visible="false">
       </a-image>
 
-      <!-- 🎬 Écran secondaire (survpas / ALCE5581) -->
-    <a-video id="videoScreen2" 
-      src="#video-survpas"
-      width="16"
-      height="9"
-      position="-12.24911 -5.5989 11.86178"
-      rotation="5.098751418869196 179.95114654791817 1.7039764827190682"
-      scale="0.2225 0.22086 1">
-    </a-video>
-
+      <!-- 🎬 Écran secondaire -->
+      <a-video id="videoScreen2" 
+        src="#video-survpas"
+        width="16"
+        height="9"
+        position="-12.24911 -5.5989 11.86178"
+        rotation="5.09875 179.95114 1.70397"
+        scale="0.2225 0.22086 1">
+      </a-video>
 
       <!-- 🌌 Ciel -->
       <a-sky src="#salless"></a-sky>
 
-      <!-- 🎥 Caméra du joueur -->
-      <a-entity camera position="0 1.6 0" look-controls>
-        <a-entity cursor="rayOrigin: mouse"></a-entity>
+      <!-- 🎥 RIG + Caméra -->
+      <a-entity id="rig" wasd-controls>
+        <a-entity camera position="0 1.6 0" look-controls>
+          <a-entity cursor="rayOrigin: mouse"></a-entity>
+        </a-entity>
       </a-entity>
 
       <!-- 🎥 Caméras -->
@@ -106,16 +107,25 @@
       const video = document.querySelector('#flux-video');
       const videoButton = document.querySelector('#videoButton');
       const offlineImage = document.querySelector('#offlineImage');
+      const playerCamera = document.querySelector('[camera]');
+      const rig = document.querySelector('#rig');
       let isOffline = false;
 
       videoButton.addEventListener('click', () => {
         isOffline = !isOffline;
+
         if (isOffline) {
+          // 📴 Mode OFFLINE
           offlineImage.setAttribute('visible', true);
           video.pause();
           videoButton.setAttribute('material', 'color: #ff0000');
           videoButton.removeAttribute('animation__pulse');
+
+          // 🔒 Bloquer la caméra (rotation + déplacement)
+          playerCamera.removeAttribute('look-controls');
+          rig.removeAttribute('wasd-controls');
         } else {
+          // 📺 Mode ONLINE
           offlineImage.setAttribute('visible', false);
           video.play();
           videoButton.setAttribute('material', 'color: green');
@@ -123,10 +133,14 @@
             'animation__pulse',
             'property: scale; to: 0.035 0.035 0.035; dir: alternate; dur: 600; loop: true; easing: easeInOutSine'
           );
+
+          // 🔓 Débloquer la caméra (rotation + déplacement)
+          playerCamera.setAttribute('look-controls', '');
+          rig.setAttribute('wasd-controls', '');
         }
       });
 
-      // --- 💗 Bouton rose : lecture / pause vidéo ALCE5581 avec son ---
+      // --- 💗 Bouton rose : lecture / pause vidéo ALCE5581 ---
       const boutonRose = document.querySelector('#boutonRose');
       const videoALCE = document.querySelector('#video-survpas');
       const videoScreenALCE = document.querySelector('#videoScreen2');
