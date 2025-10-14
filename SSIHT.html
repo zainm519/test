@@ -46,20 +46,22 @@
         scale="0.03 0.03 0.03">
       </a-obj-model>
 
-      <!--MINI-->
-     <a-entity id="miniEntity" 
-       gltf-model="orange_safe_zone_minitel_phone.glb"
-       position="7.85511 -0.25866 0.17654"
-       rotation="0 -92.4776799652954 0"
-       scale="0.8 0.8 0.8">
-    </a-entity>
+      <!-- 📟 MINI -->
+      <a-entity id="miniEntity" 
+        gltf-model="orange_safe_zone_minitel_phone.glb"
+        position="7.85511 -0.25866 0.17654"
+        rotation="0 -92.47767 0"
+        scale="0.8 0.8 0.8">
+      </a-entity>
 
-    <a-entity id="keyEntity"
-      gltf-model="keyboard.glb"
-      position="17.25583 -12.67706 6.21092"
-      rotation="-0.01604281826366305 -163.0322758155001 -0.002864788975654116"
-      scale="1.33483 1.2 1.2">
-     </a-entity>
+      <!-- ⌨️ CLAVIER -->
+      <a-entity id="keyEntity"
+        gltf-model="keyboard.glb"
+        position="17.25583 -12.67706 6.21092"
+        rotation="-0.016 -163.032 -0.002"
+        scale="1.33483 1.2 1.2"
+        class="clickable">
+      </a-entity>
       
       <!-- 🎬 Écran principal -->
       <a-video
@@ -91,7 +93,7 @@
         width="16"
         height="9"
         position="-12.24911 -5.5989 11.86178"
-        rotation="5.098751418869196 179.95114654791817 1.7039764827190682"
+        rotation="5.09875 179.9511 1.70397"
         scale="0.2225 0.22086 1">
       </a-video>
 
@@ -109,13 +111,14 @@
         gltf-model="#surv" 
         position="-31.71937 19.99428 49.34695"
         scale="15 15 15" 
-        rotation="-17.79 -33.49 11.10"
+        rotation="-17.79 -33.49 11.10">
       </a-entity>
 
       <a-entity id="survpas"
         gltf-model="surveillance_camerapaspied.glb"
         position="-0.06472 -0.26624 6.60554"
-        scale="2.5 2.5 2.5" rotation="17.39 148.51751948866695 -1.12"
+        scale="2.5 2.5 2.5" 
+        rotation="17.39 148.5175 -1.12"
         animation="dir: alternate; dur: 2000; easing: easeInOutSine; loop: true; property: rotation; to: 17.39 167.23 -1.12">
       </a-entity>
         
@@ -132,6 +135,9 @@
     </a-scene>
 
     <script>
+      /* -------------------
+         🎬 CONTROLE BOUTONS
+      -------------------- */
       const video = document.querySelector('#flux-video');
       const videoButton = document.querySelector('#videoButton');
       const offlineImage = document.querySelector('#offlineImage');
@@ -139,43 +145,24 @@
 
       videoButton.addEventListener('click', () => {
         isOffline = !isOffline;
-
         const surv = document.querySelector('#surv');
         const survpas = document.querySelector('#survpas');
 
         if (isOffline) {
-          // 📴 Mode OFFLINE
           offlineImage.setAttribute('visible', true);
           video.pause();
           videoButton.setAttribute('material', 'color: #ff0000');
-          videoButton.removeAttribute('animation__pulse');
-
-          // 🧯 Stopper les caméras
           stopAnimation(surv);
           stopAnimation(survpas);
         } else {
-          // 📺 Mode ONLINE
           offlineImage.setAttribute('visible', false);
           video.play();
           videoButton.setAttribute('material', 'color: green');
-          videoButton.setAttribute(
-            'animation__pulse',
-            'property: scale; to: 0.035 0.035 0.035; dir: alternate; dur: 600; loop: true; easing: easeInOutSine'
-          );
-
-          // 🔁 Relancer les animations des caméras
-          surv.setAttribute(
-            'animation',
-            'property: rotation; dir: alternate; dur: 2500; easing: easeInOutSine; to: -17.79 -53.49 11.10; loop: true'
-          );
-          survpas.setAttribute(
-            'animation',
-            'property: rotation; dir: alternate; dur: 2000; easing: easeInOutSine; to: 17.39 167.23 -1.12; loop: true'
-          );
+          surv.setAttribute('animation','property: rotation; dir: alternate; dur: 2500; easing: easeInOutSine; to: -17.79 -53.49 11.10; loop: true');
+          survpas.setAttribute('animation','property: rotation; dir: alternate; dur: 2000; easing: easeInOutSine; to: 17.39 167.23 -1.12; loop: true');
         }
       });
 
-      // Fonction pour stopper l’animation et fixer la rotation actuelle
       function stopAnimation(el) {
         if (!el) return;
         const rot = el.getAttribute('rotation');
@@ -183,42 +170,34 @@
         el.setAttribute('rotation', `${rot.x} ${rot.y} ${rot.z}`);
       }
 
-      // --- 💗 Bouton rose : lecture / pause vidéo ALCE5581 avec son ---
+      /* -------------------
+         💗 BOUTON ROSE VIDÉO
+      -------------------- */
       const boutonRose = document.querySelector('#boutonRose');
       const videoALCE = document.querySelector('#video-survpas');
       const videoScreenALCE = document.querySelector('#videoScreen2');
-      let wasMutedByBrowser = false;
-
       boutonRose.addEventListener('click', () => {
         if (videoALCE.paused) {
           videoScreenALCE.setAttribute('visible', true);
           boutonRose.setAttribute('material', 'color: #00ff80');
           videoALCE.muted = false;
-          const playPromise = videoALCE.play();
-          if (playPromise !== undefined) {
-            playPromise.catch(err => {
-              console.warn('🔇 Lecture bloquée, activation du mode muet :', err);
-              videoALCE.muted = true;
-              wasMutedByBrowser = true;
-              videoALCE.play();
-            });
-          }
+          videoALCE.play().catch(() => { videoALCE.muted = true; videoALCE.play(); });
         } else {
           videoALCE.pause();
           videoScreenALCE.setAttribute('visible', false);
           boutonRose.setAttribute('material', 'color: #ff80c0');
-          boutonRose.removeAttribute('animation__pulse');
           videoALCE.muted = true;
         }
       });
 
-      // --- 🔔 Gestion de l’alarme ---
+      /* -------------------
+         🔔 ALARME
+      -------------------- */
       const alarm = document.querySelector('#alarme');
       const ACTIVE_TINT = 0xff7700;
       alarm._originalMaterials = null;
 
       alarm.addEventListener('model-loaded', () => saveOriginalMaterials());
-
       function saveOriginalMaterials() {
         const root = alarm.getObject3D('mesh');
         if (!root) return;
@@ -226,30 +205,21 @@
         root.traverse(node => {
           if (node.isMesh) {
             const mat = node.material;
-            if (Array.isArray(mat)) {
-              originals.push({ uuid: node.uuid, material: mat.map(m => m.clone()) });
-            } else {
-              originals.push({ uuid: node.uuid, material: mat.clone() });
-            }
+            originals.push({ uuid: node.uuid, material: Array.isArray(mat) ? mat.map(m => m.clone()) : mat.clone() });
           }
         });
         alarm._originalMaterials = originals;
       }
-
       function tintAlarm(color) {
         const root = alarm.getObject3D('mesh');
         if (!root) return;
         root.traverse(node => {
           if (node.isMesh) {
             const mats = Array.isArray(node.material) ? node.material : [node.material];
-            mats.forEach(m => {
-              if (m.color) m.color.set(color);
-              if (m.emissive) m.emissive.set(color);
-            });
+            mats.forEach(m => { if (m.color) m.color.set(color); if (m.emissive) m.emissive.set(color); });
           }
         });
       }
-
       function restoreOriginalMaterials() {
         const root = alarm.getObject3D('mesh');
         if (!root || !alarm._originalMaterials) return;
@@ -260,14 +230,11 @@
           }
         });
       }
-
       alarm.addEventListener('click', () => {
         if (alarm.classList.contains('triggered')) return;
         alarm.classList.add('triggered');
-
         if (!alarm._originalMaterials) saveOriginalMaterials();
         tintAlarm(ACTIVE_TINT);
-
         if (alarm.components && alarm.components.sound) alarm.components.sound.playSound();
 
         const flameLight = document.createElement('a-entity');
@@ -289,6 +256,54 @@
           alarm.classList.remove('triggered');
         }, 3000);
       });
-    </script>
-  </body>
-</html>
+
+      /* -------------------
+         ⚔️ CLAVIER SHONEN MANGA
+      -------------------- */
+      (function() {
+        const key = document.querySelector('#keyEntity');
+        if (!key) return;
+
+        const ATTACKS = [
+          "技 : データ斬り！ (Data Slash!) ⚡",
+          "技 : 雷撃拳！ (Raigeki Fist!) ⚡",
+          "技 : 連撃 (Rengeki) ×3！ 💥",
+          "必殺技 : サイバー拳！ (Cyber Punch!) 💥",
+          "必殺奥義 : 虚空断 (Void Break) — 一撃必殺！"
+        ];
+        const MAX_ATTACKS = ATTACKS.length;
+        let attackIndex = 0;
+        let locked = false;
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        let audioCtx = null;
+        function ensureAudio() {
+          if (!audioCtx) audioCtx = new AudioCtx();
+        }
+        function playAttackSound(type = 0) {
+          ensureAudio();
+          const now = audioCtx.currentTime;
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = type % 2 === 0 ? 'sawtooth' : 'square';
+          osc.frequency.setValueAtTime(220 + type * 120, now);
+          gain.gain.setValueAtTime(0, now);
+          gain.gain.linearRampToValueAtTime(0.4, now + 0.01);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(now);
+          osc.stop(now + 0.35);
+        }
+        function createEntity(tag, attrs = {}, parent = key) {
+          const el = document.createElement(tag);
+          Object.keys(attrs).forEach(k => el.setAttribute(k, attrs[k]));
+          parent.appendChild(el);
+          return el;
+        }
+        function doAttack(textStr, idx) {
+          if (locked) return;
+          locked = true;
+          key.setAttribute('animation__shake', 'property: position; from: 0 0 0; to: 0.05 0.05 0; dur: 100; dir: alternate; loop: 4');
+          key.setAttribute('animation__flashcolour', 'property: material.color; from: #fff; to: #ff8c00; dur: 120; dir: alternate; loop: 2');
+
+          const
