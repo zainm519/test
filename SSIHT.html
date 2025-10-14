@@ -12,6 +12,7 @@
         <video id="flux-video" autoplay="false" loop="true" muted src="Flux-Video.mp4"></video>
         <video id="video-survpas" autoplay="false" loop="true" src="ALCE5581.mp4"></video>
         <a-asset-item id="bouton" src="bouton-camera.obj"></a-asset-item>
+        <a-asset-item id="butin" src="bout.obj"></a-asset-item>
         <a-asset-item id="alar" src="alarme.glb"></a-asset-item>
         <a-asset-item id="survpas" src="surveillance_camerapaspied.glb"></a-asset-item>
         <a-asset-item id="surv" src="surveillance_camerapied.glb"></a-asset-item>
@@ -20,6 +21,9 @@
         <audio id="alarmsound" src="alarme-342932.mp3" preload="auto"></audio>
         <video id="shidou" class="clickable" autoplay loop="true" src="ALCE5581.mp4"></video>
       </a-assets>
+
+      <a-video src="#shidou" width="16" height="9" position="-50.91189 -28.66231 49.60279" rotation="0 180 0"></a-video>
+      <a-video src="ALCE5581.mp4"></a-video>
    
       <!-- 🔴 Bouton principal -->
       <a-obj-model id="videoButton" 
@@ -32,13 +36,13 @@
       </a-obj-model>
       
       <!-- 💗 Bouton rose (ALCE5581) -->
-     <a-obj-model id="boutonRose"
-       class="clickable"
-       src="#bouton"
-       position="5.60329 -20.56708 45.77585"
-       material="color: #ff80c0"
-       rotation="-89.87416 179.99985 179.99985"
-       scale="0.01 0.01 0.01">
+      <a-obj-model id="boutonRose"
+        class="clickable"
+        src="#bouton"
+        position="-19.42891 -19.40063 24.85667"
+        material="color: #ff80c0"
+        rotation="-89.87416 179.99985 179.99985"
+        scale="0.03 0.03 0.03">
       </a-obj-model>
       
       <!-- 🎬 Écran principal -->
@@ -65,16 +69,18 @@
       </a-image>
 
       <!-- 🎬 Écran secondaire (survpas / ALCE5581) -->
-  <a-video id="videoScreen2"
+     <a-video
+    id="videoScreen2"
     src="#video-survpas"
     width="16"
     height="9"
-    position="-13.24634 -6.14299 12.7843"
-    rotation="0.3294500000000001 -174.604 5.9679"
-    scale="0.29218 0.2635 1" 
+    position="1.5 -5.90513 8.79376"
+    rotation="0.32945 -174.604 5.9679"
+    scale="0.22282 0.22972 1"
     visible="false">
     </a-video>
-      
+
+
       <!-- 🌌 Ciel -->
       <a-sky src="#salless"></a-sky>
 
