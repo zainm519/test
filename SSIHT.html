@@ -46,7 +46,7 @@
         scale="0.03 0.03 0.03">
       </a-obj-model>
 
-      <!-- 📟 MiniTel -->
+      <!--MINI-->
       <a-entity id="miniEntity" 
         gltf-model="orange_safe_zone_minitel_phone.glb"
         position="7.85511 -0.25866 0.17654"
@@ -54,7 +54,7 @@
         scale="0.8 0.8 0.8">
       </a-entity>
 
-      <!-- ⌨️ Clavier -->
+      <!--clavier-->
       <a-entity id="keyEntity"
         gltf-model="keyboard.glb"
         position="5.3994 -6.80453 10.95032"
@@ -110,14 +110,13 @@
         gltf-model="#surv" 
         position="-31.71937 19.99428 49.34695"
         scale="15 15 15" 
-        rotation="-17.79 -33.49 11.10">
-      </a-entity>
+        rotation="-17.79 -33.49 11.10"
+      ></a-entity>
 
       <a-entity id="survpas"
         gltf-model="surveillance_camerapaspied.glb"
         position="-0.06472 -0.26624 6.60554"
-        scale="2.5 2.5 2.5" 
-        rotation="17.39 148.51751948866695 -1.12"
+        scale="2.5 2.5 2.5" rotation="17.39 148.51751948866695 -1.12"
         animation="dir: alternate; dur: 2000; easing: easeInOutSine; loop: true; property: rotation; to: 17.39 167.23 -1.12">
       </a-entity>
         
@@ -132,16 +131,18 @@
         sound="src: #alarmsound; autoplay: false; volume: 2">
       </a-entity>
 
-      <!-- ✳️ Effet Matrix -->
+      <!-- ✳️ Effet Matrix (initialement masqué) -->
       <a-entity id="matrixEffect" visible="false">
+        <!-- Fond noir -->
         <a-plane 
           position="0 1.6 -3" 
           width="100" 
-          height="100" 
+          height="100"
           color="black"
           material="opacity: 1; side: double">
         </a-plane>
 
+        <!-- Mur de chiffres verts -->
         <a-plane
           id="matrixText"
           position="0 1.6 -2.9"
@@ -151,11 +152,10 @@
           material="shader: flat; transparent: true">
         </a-plane>
       </a-entity>
-
     </a-scene>
 
-    <!-- 💻 Scripts -->
     <script>
+      // ----------------------------- Mode ONLINE/OFFLINE -----------------------------
       const video = document.querySelector('#flux-video');
       const videoButton = document.querySelector('#videoButton');
       const offlineImage = document.querySelector('#offlineImage');
@@ -163,7 +163,6 @@
 
       videoButton.addEventListener('click', () => {
         isOffline = !isOffline;
-
         const surv = document.querySelector('#surv');
         const survpas = document.querySelector('#survpas');
 
@@ -182,8 +181,14 @@
             'animation__pulse',
             'property: scale; to: 0.035 0.035 0.035; dir: alternate; dur: 600; loop: true; easing: easeInOutSine'
           );
-          surv.setAttribute('animation','property: rotation; dir: alternate; dur: 2500; easing: easeInOutSine; to: -17.79 -53.49 11.10; loop: true');
-          survpas.setAttribute('animation','property: rotation; dir: alternate; dur: 2000; easing: easeInOutSine; to: 17.39 167.23 -1.12; loop: true');
+          surv.setAttribute(
+            'animation',
+            'property: rotation; dir: alternate; dur: 2500; easing: easeInOutSine; to: -17.79 -53.49 11.10; loop: true'
+          );
+          survpas.setAttribute(
+            'animation',
+            'property: rotation; dir: alternate; dur: 2000; easing: easeInOutSine; to: 17.39 167.23 -1.12; loop: true'
+          );
         }
       });
 
@@ -194,6 +199,7 @@
         el.setAttribute('rotation', `${rot.x} ${rot.y} ${rot.z}`);
       }
 
+      // ----------------------------- Bouton rose ALCE5581 -----------------------------
       const boutonRose = document.querySelector('#boutonRose');
       const videoALCE = document.querySelector('#video-survpas');
       const videoScreenALCE = document.querySelector('#videoScreen2');
@@ -222,12 +228,13 @@
         }
       });
 
-      // --- 🔔 Gestion de l’alarme ---
+      // ----------------------------- Alarme -----------------------------
       const alarm = document.querySelector('#alarme');
       const ACTIVE_TINT = 0xff7700;
       alarm._originalMaterials = null;
 
       alarm.addEventListener('model-loaded', () => saveOriginalMaterials());
+
       function saveOriginalMaterials() {
         const root = alarm.getObject3D('mesh');
         if (!root) return;
@@ -235,7 +242,11 @@
         root.traverse(node => {
           if (node.isMesh) {
             const mat = node.material;
-            originals.push({ uuid: node.uuid, material: Array.isArray(mat) ? mat.map(m => m.clone()) : mat.clone() });
+            if (Array.isArray(mat)) {
+              originals.push({ uuid: node.uuid, material: mat.map(m => m.clone()) });
+            } else {
+              originals.push({ uuid: node.uuid, material: mat.clone() });
+            }
           }
         });
         alarm._originalMaterials = originals;
@@ -269,7 +280,6 @@
       alarm.addEventListener('click', () => {
         if (alarm.classList.contains('triggered')) return;
         alarm.classList.add('triggered');
-
         if (!alarm._originalMaterials) saveOriginalMaterials();
         tintAlarm(ACTIVE_TINT);
         if (alarm.components && alarm.components.sound) alarm.components.sound.playSound();
@@ -294,12 +304,13 @@
         }, 3000);
       });
 
-      // --- 💻 Effet Matrix sur clic du clavier ---
+      // ----------------------------- Effet Matrix -----------------------------
       const keyEntity = document.querySelector('#keyEntity');
       const sky = document.querySelector('a-sky');
       const matrixEffect = document.querySelector('#matrixEffect');
       const matrixPlane = document.querySelector('#matrixText');
-      let matrixActive = false, matrixInterval = null;
+      let matrixActive = false;
+      let matrixInterval = null;
 
       keyEntity.addEventListener('click', () => {
         matrixActive = !matrixActive;
@@ -323,19 +334,28 @@
         const ypos = Array(cols).fill(0);
 
         const texture = new THREE.CanvasTexture(canvas);
-        plane.getObject3D('mesh').material.map = texture;
-        plane.getObject3D('mesh').material.needsUpdate = true;
+        texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+
+        function applyTexture() {
+          const mesh = plane.getObject3D('mesh');
+          if (!mesh) {
+            setTimeout(applyTexture, 100);
+            return;
+          }
+          mesh.material.map = texture;
+          mesh.material.needsUpdate = true;
+        }
+        applyTexture();
 
         matrixInterval = setInterval(() => {
-          ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+          ctx.fillStyle = 'rgba(0,0,0,0.05)';
           ctx.fillRect(0, 0, w, h);
           ctx.fillStyle = '#0F0';
           ctx.font = '15pt monospace';
           ypos.forEach((y, ind) => {
             const text = Math.random() > 0.5 ? '1' : '0';
-            const x = ind * 10;
-            ctx.fillText(text, x, y);
-            ypos[ind] = y > 100 + Math.random() * 10000 ? 0 : y + 10;
+            ctx.fillText(text, ind * 10, y);
+            ypos[ind] = y > h + Math.random() * 10000 ? 0 : y + 10;
           });
           texture.needsUpdate = true;
         }, 50);
