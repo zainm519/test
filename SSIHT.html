@@ -63,6 +63,42 @@
         class="clickable">
       </a-entity>
       
+  /* -------------------
+     🧱 TEXTE FIXE SUR LE CLAVIER
+  -------------------- */
+  const clavier = document.querySelector('#keyEntity');
+
+  // 👉 Ton texte personnalisé ici :
+  const MON_TEXTE = "Système de communication activé 💻";
+
+  clavier.addEventListener('click', () => {
+    const scene = document.querySelector('a-scene');
+
+    // Supprime le texte précédent s’il existe déjà
+    const oldText = document.querySelector('#keyboardText');
+    if (oldText) oldText.remove();
+
+    // Crée un nouvel élément texte
+    const textEl = document.createElement('a-text');
+    textEl.setAttribute('id', 'keyboardText');
+    te xtEl.setAttribute('value', MON_TEXTE);
+    textEl.setAttribute('color', '#00ffff');
+    textEl.setAttribute('align', 'center');
+    textEl.setAttribute('scale', '2 2 2');
+
+    // Position : juste au-dessus du clavier
+    textEl.setAttribute('position', '17.25583 -10.5 6.21092');
+
+    // Ajoute le texte à la scène
+    scene.appendChild(textEl);
+
+    // Fait disparaître le texte après 4 secondes (tu peux changer la durée)
+    setTimeout(() => {
+      if (textEl.parentNode) textEl.remove();
+    }, 4000);
+  });
+
+      
       <!-- 🎬 Écran principal -->
       <a-video
         id="videoScreen"
