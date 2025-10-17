@@ -46,62 +46,20 @@
         scale="0.03 0.03 0.03">
       </a-obj-model>
 
-      <!--MINI-->
-     <a-entity id="miniEntity" 
+      <!-- MINI -->
+      <a-entity id="miniEntity" 
        gltf-model="orange_safe_zone_minitel_phone.glb"
        position="7.85511 -0.25866 0.17654"
        rotation="0 -92.4776799652954 0"
        scale="0.8 0.8 0.8">
-    </a-entity>
+      </a-entity>
 
-    <a-entity id="keyEntity"
-      gltf-model="keyboard.glb"
-      position="17.25583 -12.67706 6.21092"
-      rotation="-0.01604281826366305 -163.0322758155001 -0.002864788975654116"
-      scale="1.33483 1.2 1.2">
-     </a-entity>
-     
-      
-    // --- 💬 Quand on clique sur le clavier, afficher du texte devant la caméra ---
-AFRAME.registerComponent('keyboard-hud', {
-  init: function () {
-    const clavier = document.querySelector('#keyEntity');
-    const camera = document.querySelector('[camera]');
-    if (!clavier || !camera) return;
-
-    // 📝 Texte que tu veux afficher :
-    const MON_TEXTE = "✅ Terminal activé avec succès !";
-
-    clavier.addEventListener('click', () => {
-      // Supprime un ancien texte s’il existe
-      const old = document.querySelector('#hudText');
-      if (old) old.remove();
-
-      // Crée une entité texte
-      const textEl = document.createElement('a-entity');
-      textEl.setAttribute('id', 'hudText');
-      textEl.setAttribute('text', {
-        value: MON_TEXTE,
-        align: 'center',
-        color: '#00ffff',
-        width: 3
-      });
-
-      // 📍 Positionne le texte juste devant la caméra (par ex. 1.5 m)
-      textEl.setAttribute('position', '0 0 -1.5');
-      
-      // Ajoute le texte en *enfant de la caméra*
-      camera.appendChild(textEl);
-
-      // Supprime après 3 secondes
-      setTimeout(() => textEl.remove(), 3000);
-    });
-  }
-});
-
-// ⚙️ Active le composant sur la scène
-document.querySelector('a-scene').setAttribute('keyboard-hud', '');
-
+      <a-entity id="keyEntity"
+        gltf-model="keyboard.glb"
+        position="17.25583 -12.67706 6.21092"
+        rotation="-0.01604281826366305 -163.0322758155001 -0.002864788975654116"
+        scale="1.33483 1.2 1.2">
+      </a-entity>
       
       <!-- 🎬 Écran principal -->
       <a-video
@@ -151,13 +109,14 @@ document.querySelector('a-scene').setAttribute('keyboard-hud', '');
         gltf-model="#surv" 
         position="-31.71937 19.99428 49.34695"
         scale="15 15 15" 
-        rotation="-17.79 -33.49 11.10"
+        rotation="-17.79 -33.49 11.10">
       </a-entity>
 
       <a-entity id="survpas"
         gltf-model="surveillance_camerapaspied.glb"
         position="-0.06472 -0.26624 6.60554"
-        scale="2.5 2.5 2.5" rotation="17.39 148.51751948866695 -1.12"
+        scale="2.5 2.5 2.5"
+        rotation="17.39 148.51751948866695 -1.12"
         animation="dir: alternate; dur: 2000; easing: easeInOutSine; loop: true; property: rotation; to: 17.39 167.23 -1.12">
       </a-entity>
         
@@ -174,6 +133,9 @@ document.querySelector('a-scene').setAttribute('keyboard-hud', '');
     </a-scene>
 
     <script>
+      /* -------------------
+         Gestion vidéos, boutons et alarmes (existant)
+      -------------------- */
       const video = document.querySelector('#flux-video');
       const videoButton = document.querySelector('#videoButton');
       const offlineImage = document.querySelector('#offlineImage');
@@ -186,17 +148,13 @@ document.querySelector('a-scene').setAttribute('keyboard-hud', '');
         const survpas = document.querySelector('#survpas');
 
         if (isOffline) {
-          // 📴 Mode OFFLINE
           offlineImage.setAttribute('visible', true);
           video.pause();
           videoButton.setAttribute('material', 'color: #ff0000');
           videoButton.removeAttribute('animation__pulse');
-
-          // 🧯 Stopper les caméras
           stopAnimation(surv);
           stopAnimation(survpas);
         } else {
-          // 📺 Mode ONLINE
           offlineImage.setAttribute('visible', false);
           video.play();
           videoButton.setAttribute('material', 'color: green');
@@ -204,8 +162,6 @@ document.querySelector('a-scene').setAttribute('keyboard-hud', '');
             'animation__pulse',
             'property: scale; to: 0.035 0.035 0.035; dir: alternate; dur: 600; loop: true; easing: easeInOutSine'
           );
-
-          // 🔁 Relancer les animations des caméras
           surv.setAttribute(
             'animation',
             'property: rotation; dir: alternate; dur: 2500; easing: easeInOutSine; to: -17.79 -53.49 11.10; loop: true'
@@ -217,7 +173,6 @@ document.querySelector('a-scene').setAttribute('keyboard-hud', '');
         }
       });
 
-      // Fonction pour stopper l’animation et fixer la rotation actuelle
       function stopAnimation(el) {
         if (!el) return;
         const rot = el.getAttribute('rotation');
@@ -225,12 +180,10 @@ document.querySelector('a-scene').setAttribute('keyboard-hud', '');
         el.setAttribute('rotation', `${rot.x} ${rot.y} ${rot.z}`);
       }
 
-      // --- 💗 Bouton rose : lecture / pause vidéo ALCE5581 avec son ---
+      // --- 💗 Bouton rose ---
       const boutonRose = document.querySelector('#boutonRose');
       const videoALCE = document.querySelector('#video-survpas');
       const videoScreenALCE = document.querySelector('#videoScreen2');
-      let wasMutedByBrowser = false;
-
       boutonRose.addEventListener('click', () => {
         if (videoALCE.paused) {
           videoScreenALCE.setAttribute('visible', true);
@@ -239,98 +192,8 @@ document.querySelector('a-scene').setAttribute('keyboard-hud', '');
           const playPromise = videoALCE.play();
           if (playPromise !== undefined) {
             playPromise.catch(err => {
-              console.warn('🔇 Lecture bloquée, activation du mode muet :', err);
               videoALCE.muted = true;
-              wasMutedByBrowser = true;
               videoALCE.play();
             });
           }
-        } else {
-          videoALCE.pause();
-          videoScreenALCE.setAttribute('visible', false);
-          boutonRose.setAttribute('material', 'color: #ff80c0');
-          boutonRose.removeAttribute('animation__pulse');
-          videoALCE.muted = true;
         }
-      });
-
-      // --- 🔔 Gestion de l’alarme ---
-      const alarm = document.querySelector('#alarme');
-      const ACTIVE_TINT = 0xff7700;
-      alarm._originalMaterials = null;
-
-      alarm.addEventListener('model-loaded', () => saveOriginalMaterials());
-
-      function saveOriginalMaterials() {
-        const root = alarm.getObject3D('mesh');
-        if (!root) return;
-        const originals = [];
-        root.traverse(node => {
-          if (node.isMesh) {
-            const mat = node.material;
-            if (Array.isArray(mat)) {
-              originals.push({ uuid: node.uuid, material: mat.map(m => m.clone()) });
-            } else {
-              originals.push({ uuid: node.uuid, material: mat.clone() });
-            }
-          }
-        });
-        alarm._originalMaterials = originals;
-      }
-
-      function tintAlarm(color) {
-        const root = alarm.getObject3D('mesh');
-        if (!root) return;
-        root.traverse(node => {
-          if (node.isMesh) {
-            const mats = Array.isArray(node.material) ? node.material : [node.material];
-            mats.forEach(m => {
-              if (m.color) m.color.set(color);
-              if (m.emissive) m.emissive.set(color);
-            });
-          }
-        });
-      }
-
-      function restoreOriginalMaterials() {
-        const root = alarm.getObject3D('mesh');
-        if (!root || !alarm._originalMaterials) return;
-        root.traverse(node => {
-          if (node.isMesh) {
-            const orig = alarm._originalMaterials.find(o => o.uuid === node.uuid);
-            if (orig) node.material = orig.material;
-          }
-        });
-      }
-
-      alarm.addEventListener('click', () => {
-        if (alarm.classList.contains('triggered')) return;
-        alarm.classList.add('triggered');
-
-        if (!alarm._originalMaterials) saveOriginalMaterials();
-        tintAlarm(ACTIVE_TINT);
-
-        if (alarm.components && alarm.components.sound) alarm.components.sound.playSound();
-
-        const flameLight = document.createElement('a-entity');
-        flameLight.setAttribute('light', 'type: point; intensity: 2.0; color: orange; distance: 10; decay: 2');
-        flameLight.setAttribute('position', '0 3 0');
-        alarm.appendChild(flameLight);
-
-        const flame = document.createElement('a-sphere');
-        flame.setAttribute('position', '0 3 0');
-        flame.setAttribute('radius', '1.5');
-        flame.setAttribute('material', 'color: orange; emissive: red; opacity: 0.6; transparent: true');
-        flame.setAttribute('animation', 'property: scale; to: 1.3 1.5 1.3; dir: alternate; dur: 200; loop: true');
-        alarm.appendChild(flame);
-
-        setTimeout(() => {
-          flame.remove();
-          flameLight.remove();
-          restoreOriginalMaterials();
-          alarm.classList.remove('triggered');
-        }, 3000);
-      });
-    </script>
-  </body>
-</html>
