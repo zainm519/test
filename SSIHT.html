@@ -13,6 +13,7 @@
         <video id="video-survpas" autoplay="false" loop="true" src="ALCE5581.mp4"></video>
         <a-asset-item id="bouton" src="bouton-camera.obj"></a-asset-item>
         <a-asset-item id="butin" src="bout.obj"></a-asset-item>
+        <img id="ssalless" src="ssallessihtb.jpg" /> 
         <a-asset-item id="mini" src="orange_safe_zone_minitel_phone.glb"></a-asset-item>
         <a-asset-item id="key" src="keyboard.glb"></a-asset-item>
         <a-asset-item id="alar" src="alarme.glb"></a-asset-item>
@@ -96,7 +97,11 @@
         scale="0.2225 0.22086 1">
       </a-video>
 
+     
       <!-- 🌌 Ciel -->
+      <a-sky src="#ssalless"></a-sky> 
+      
+      
       <!-- 🎥 Caméra joueur -->
       <a-entity camera position="0 1.6 0" look-controls>
         <a-entity cursor="rayOrigin: mouse"></a-entity>
