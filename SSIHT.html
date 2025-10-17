@@ -62,44 +62,45 @@
      </a-entity>
      
       
-      // --- 🧠 Quand on clique sur le clavier, afficher ton texte ---
-AFRAME.registerComponent('keyboard-message', {
+    // --- 💬 Quand on clique sur le clavier, afficher du texte devant la caméra ---
+AFRAME.registerComponent('keyboard-hud', {
   init: function () {
     const clavier = document.querySelector('#keyEntity');
-    const scene = document.querySelector('a-scene');
+    const camera = document.querySelector('[camera]');
+    if (!clavier || !camera) return;
 
-    // 📝 Mets ici le texte que tu veux afficher :
-    const MON_TEXTE = "🔵 Message personnel : Le terminal est activé.";
+    // 📝 Texte que tu veux afficher :
+    const MON_TEXTE = "✅ Terminal activé avec succès !";
 
     clavier.addEventListener('click', () => {
-      // Supprime un éventuel texte existant
-      const old = document.querySelector('#keyboardText');
+      // Supprime un ancien texte s’il existe
+      const old = document.querySelector('#hudText');
       if (old) old.remove();
 
-      // Crée un nouveau texte 3D
+      // Crée une entité texte
       const textEl = document.createElement('a-entity');
-      textEl.setAttribute('id', 'keyboardText');
+      textEl.setAttribute('id', 'hudText');
       textEl.setAttribute('text', {
         value: MON_TEXTE,
         align: 'center',
         color: '#00ffff',
-        width: 4
+        width: 3
       });
 
-      // Positionne le texte juste au-dessus du clavier
-      textEl.setAttribute('position', '17.25583 -10.5 6.21092');
+      // 📍 Positionne le texte juste devant la caméra (par ex. 1.5 m)
+      textEl.setAttribute('position', '0 0 -1.5');
+      
+      // Ajoute le texte en *enfant de la caméra*
+      camera.appendChild(textEl);
 
-      // Ajoute à la scène
-      scene.appendChild(textEl);
-
-      // Supprime après 4 secondes
-      setTimeout(() => textEl.remove(), 4000);
+      // Supprime après 3 secondes
+      setTimeout(() => textEl.remove(), 3000);
     });
   }
 });
 
-// Active le composant sur la scène
-document.querySelector('a-scene').setAttribute('keyboard-message', '');
+// ⚙️ Active le composant sur la scène
+document.querySelector('a-scene').setAttribute('keyboard-hud', '');
 
       
       <!-- 🎬 Écran principal -->
