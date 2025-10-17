@@ -13,7 +13,9 @@
         <video id="video-survpas" autoplay="false" loop="true" src="ALCE5581.mp4"></video>
         <a-asset-item id="bouton" src="bouton-camera.obj"></a-asset-item>
         <a-asset-item id="butin" src="bout.obj"></a-asset-item>
-        <a-asset-item id="alar" src="alarme.glb"></a-asset-item>
+        <a-asset-item id="alar" src="alarme.glb"></a-asset-item>       
+        <a-asset-item id="key" src="keyboard.glb"></a-asset-item>
+        <a-asset-item id="mini" src="orange_safe_zone_minitel_phone.glb"></a-asset-item>
         <a-asset-item id="survpas" src="surveillance_camerapaspied.glb"></a-asset-item>
         <a-asset-item id="surv" src="surveillance_camerapied.glb"></a-asset-item>
         <img id="ssalless" src="ssallessihtb.jpg" />
@@ -52,7 +54,21 @@
         rotation="0.32945 -174.604 5.9679"
         scale="0.22282 0.22972 1">
       </a-video>
+  
+      <a-entity id="miniEntity" 
+       gltf-model="orange_safe_zone_minitel_phone.glb"
+       position="7.85511 -0.25866 0.17654"
+       rotation="0 -92.4776799652954 0"
+       scale="0.8 0.8 0.8">
+    </a-entity>
 
+    <a-entity id="keyEntity"
+      gltf-model="keyboard.glb"
+      position="17.25583 -12.67706 6.21092"
+      rotation="-0.01604281826366305 -163.0322758155001 -0.002864788975654116"
+      scale="1.33483 1.2 1.2">
+
+     </a-entity>
       <!-- 🖼️ Image OFFLINE -->
       <a-image
         id="offlineImage"
