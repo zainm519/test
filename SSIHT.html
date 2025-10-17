@@ -34,13 +34,13 @@
       
       <!-- 💗 Bouton rose (ALCE5581) -->
       <a-obj-model id="boutonRose"
-        class="clickable"
-        src="#bouton"
-        position="-19.42891 -19.40063 24.85667"
-        material="color: #ff80c0"
-        rotation="-89.87416 179.99985 179.99985"
-        scale="0.03 0.03 0.03">
-      </a-obj-model>
+    class="clickable"
+    src="#bouton"
+    position="-19.42891 -19.40063 24.85667"
+    rotation="-89.87416 179.99985 179.99985"
+    scale="0.03 0.03 0.03"
+    material="color: #ff80c0; opacity: 0; transparent: true">
+</a-obj-model>
       
       <!-- 🎬 Écran principal -->
       <a-video
@@ -137,8 +137,6 @@
           // ▶️ Lecture
           videoScreenALCE.setAttribute('visible', true);
           boutonRose.setAttribute('material', 'color: #00ff80');
-          boutonRose.setAttribute(
-            'animation__pulse',
             'property: scale; to: 0.032 0.032 0.032; dir: alternate; dur: 600; loop: true; easing: easeInOutSine'
           );
           videoALCE.muted = false;
