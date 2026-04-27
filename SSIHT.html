@@ -84,49 +84,7 @@
          height="2"
          material="src: #smoke; transparent: true; alphaTest: 0.1; opacity: 0; side: double; depthWrite: false"
          visible="false">
-</a-plane>
 
-<script>
-const naruto = document.querySelector("#narutoModel");
-const smoke = document.querySelector("#smokeEffect");
-
-naruto.addEventListener("click", () => {
-  // Rendre la fumée visible avant l'animation
-  smoke.setAttribute("visible", true);
-  smoke.setAttribute("material", "opacity", 0);
-
-  // Apparition fumée
-  smoke.setAttribute("animation__in", {
-    property: "material.opacity",
-    from: 0,
-    to: 1,
-    dur: 300,
-    easing: "easeInQuad"
-  });
-
-  // Disparition Naruto
-  setTimeout(() => {
-    naruto.setAttribute("visible", false);
-  }, 300);
-
-  // Fumée disparaît après
-  setTimeout(() => {
-    smoke.setAttribute("animation__out", {
-      property: "material.opacity",
-      from: 1,
-      to: 0,
-      dur: 800,
-      easing: "easeOutQuad"
-    });
-  }, 800);
-
-  // Cacher complètement après la fin
-  setTimeout(() => {
-    smoke.setAttribute("visible", false);
-  }, 1600);
-});
-</script>
-      
       <a-entity id="miniEntity" 
        gltf-model="orange_safe_zone_minitel_phone.glb"
        position="7.85511 -0.25866 0.17654"
